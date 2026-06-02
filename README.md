@@ -58,5 +58,5 @@ Quiz progress is stored in `localStorage` in your browser only. Nothing is sent 
 
 Built around the Microsoft AB-100 trainer guide and the canonical Microsoft Learn references. Customer stories and product names belong to their owners; this is a study companion, not an official Microsoft asset.
 
-Brought to you by **[Gennoor Tech · AI Academy](https://gennoor.com)** — live, instructor-led AI architect tracks.
+Brought to you by **[Gennoor Tech · AI Academy](https://gennoor.com/academy)** — live, instructor-led AI architect tracks.
 
