@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AB-100 — Module 10 — Design the ALM process for AI-powered business solutions</title>
+<style>
+:root {
+  --ink: #0b1530;
+  --ink-soft: #2a3450;
+  --muted: #5b6478;
+  --line: #e6ebf4;
+  --bg: #f5f7fb;
+  --bg-card: #ffffff;
+  --brand: #1f3a68;
+  --brand-soft: #2c4f8c;
+  --accent: #0078d4;
+  --good: #1f7e3a;
+  --good-soft: #e7f5ec;
+  --bad: #b03030;
+  --bad-soft: #fbeaea;
+  --warn: #b06000;
+  --warn-soft: #fff5e0;
+  --shadow: 0 6px 24px rgba(15, 29, 58, 0.08);
+  --shadow-strong: 0 12px 36px rgba(15, 29, 58, 0.14);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0; padding: 0; background: var(--bg); color: var(--ink); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 980px; margin: 0 auto; padding: 24px 22px 80px; }
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0 16px; border-bottom: 1px solid var(--line); margin-bottom: 22px;
+}
+.topbar a { color: var(--brand); font-weight: 600; text-decoration: none; font-size: 14px; }
+.topbar a:hover { text-decoration: underline; }
+.brand-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; background: var(--brand); color: white;
+  font-size: 11px; font-weight: 700; letter-spacing: .6px; border-radius: 999px; text-transform: uppercase;
+}
+.brand-pill::before {
+  content: ""; width: 8px; height: 8px; border-radius: 999px; background: #6ec1ff;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-soft) 60%, #3b6cae 100%);
+  color: white; border-radius: 20px; padding: 32px 32px; box-shadow: var(--shadow-strong);
+  margin-bottom: 24px; position: relative; overflow: hidden;
+}
+.hero::after {
+  content: ""; position: absolute; right: -80px; top: -80px; width: 280px; height: 280px;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%);
+}
+.hero-mod {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.18); padding: 5px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}
+.hero h1 { margin: 12px 0 6px; font-size: 30px; line-height: 1.2; font-weight: 700; }
+.hero .frame { font-size: 15px; opacity: 0.92; max-width: 680px; }
+
+/* Stickybar */
+.scorebar {
+  position: sticky; top: 12px; z-index: 20;
+  background: white; border-radius: 14px; box-shadow: var(--shadow);
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px; margin-bottom: 22px; gap: 12px; flex-wrap: wrap;
+}
+.scorebar .progress { color: var(--muted); }
+.scorebar .progress strong { color: var(--ink); }
+.scorebar .score { font-weight: 700; color: var(--brand); }
+.scorebar .pct { font-weight: 700; color: var(--accent); }
+
+/* Cards */
+section.card {
+  background: var(--bg-card); border-radius: 18px; box-shadow: var(--shadow);
+  padding: 26px 28px; margin-bottom: 22px;
+}
+section.card h2 {
+  font-size: 19px; color: var(--brand); margin: 0 0 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+section.card h2 .icon {
+  width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #e3ecf9, #d0deef);
+  display: inline-flex; align-items: center; justify-content: center; color: var(--brand);
+  font-size: 15px; font-weight: 800;
+}
+
+/* Recap */
+.recap-list { padding-left: 20px; margin: 0; }
+.recap-list li { margin: 8px 0; }
+.recap-list li::marker { color: var(--accent); font-weight: 700; }
+
+/* Key concepts grid */
+.concepts {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.concept {
+  border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+  background: linear-gradient(180deg, #fbfcff 0%, #f3f6fc 100%);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.concept:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.concept .term { font-weight: 700; color: var(--brand); margin-bottom: 4px; font-size: 14px; }
+.concept .def  { color: var(--ink-soft); font-size: 13.5px; }
+
+/* Cheat sheet */
+.cheat {
+  display: grid; gap: 10px;
+}
+.cheat-row {
+  display: grid; grid-template-columns: 1fr; gap: 8px; align-items: start;
+  background: linear-gradient(180deg, #fffaf0 0%, #fff5e0 100%);
+  border-left: 4px solid #c8a040; border-radius: 12px; padding: 12px 14px;
+  font-size: 14px; color: var(--ink-soft);
+}
+.cheat-row strong { color: var(--ink); }
+
+/* Quiz */
+.q-meta { color: var(--muted); font-size: 13.5px; margin: 0 0 16px; }
+.q { padding: 4px 0 6px; }
+.q + .q { border-top: 1px dashed var(--line); margin-top: 18px; padding-top: 16px; }
+.q-stem { font-weight: 600; color: var(--ink); margin: 0 0 12px; line-height: 1.5; }
+.q-num {
+  display: inline-block; background: #eef3fb; color: var(--brand); padding: 3px 10px;
+  border-radius: 999px; font-size: 12px; font-weight: 700; margin-right: 8px; vertical-align: 2px;
+}
+.options { display: flex; flex-direction: column; gap: 8px; }
+.option {
+  display: flex; align-items: flex-start; gap: 10px;
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px;
+  cursor: pointer; background: #fafbff; transition: all .15s ease;
+  font-size: 14.5px; line-height: 1.5;
+}
+.option:hover:not(.locked) {
+  border-color: var(--brand); background: #f1f5fc; transform: translateY(-1px);
+}
+.option .letter {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 6px; background: white; border: 1px solid var(--line);
+  font-weight: 700; font-size: 12px; color: var(--brand); flex-shrink: 0;
+}
+.option.locked { cursor: default; }
+.option.correct {
+  border-color: var(--good); background: var(--good-soft); color: #0c4a1c;
+}
+.option.correct .letter { background: var(--good); color: white; border-color: var(--good); }
+.option.wrong {
+  border-color: var(--bad); background: var(--bad-soft); color: #6c1414;
+}
+.option.wrong .letter { background: var(--bad); color: white; border-color: var(--bad); }
+.option.disabled { opacity: 0.55; }
+
+.explain {
+  margin-top: 12px; padding: 14px 16px; border-radius: 12px;
+  background: #f3f6fc; font-size: 14px;
+  border-left: 4px solid var(--brand);
+}
+.explain.right { background: var(--good-soft); border-left-color: var(--good); }
+.explain.wrong { background: var(--bad-soft); border-left-color: var(--bad); }
+.explain .verdict {
+  font-weight: 800; margin-right: 6px; text-transform: uppercase;
+  font-size: 12px; letter-spacing: .5px;
+}
+.explain.right .verdict { color: var(--good); }
+.explain.wrong .verdict { color: var(--bad); }
+.explain details { margin-top: 10px; }
+.explain summary {
+  cursor: pointer; font-size: 13px; color: var(--brand); font-weight: 600;
+  padding: 4px 0; outline: none;
+}
+.explain summary:hover { text-decoration: underline; }
+.explain ul { padding-left: 20px; margin: 6px 0 0; }
+.explain li { margin: 4px 0; font-size: 13px; line-height: 1.5; }
+.explain li strong { color: var(--ink); }
+
+
+/* Buttons */
+.btn {
+  padding: 9px 16px; border-radius: 10px; border: 1.5px solid var(--brand);
+  background: var(--brand); color: white; font-weight: 600; cursor: pointer;
+  font-size: 13.5px; transition: all .14s ease;
+}
+.btn:hover { background: #163056; transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn.ghost {
+  background: white; color: var(--brand);
+}
+.btn.ghost:hover { background: #eef3fb; }
+.btn.danger { border-color: var(--bad); background: var(--bad); }
+.btn.danger:hover { background: #821e1e; }
+
+/* Banners */
+.success-banner {
+  background: linear-gradient(135deg, #1f7e3a 0%, #14572a 100%); color: white;
+  border-radius: 16px; padding: 22px 26px; margin-bottom: 22px; display: none;
+  box-shadow: var(--shadow-strong);
+}
+.success-banner.show { display: block; }
+.success-banner h3 { margin: 0 0 6px; font-size: 22px; }
+.success-banner p { margin: 4px 0 0; opacity: 0.95; font-size: 14px; }
+
+/* Further reading */
+.refs a {
+  display: block; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px;
+  margin: 8px 0; color: var(--brand); text-decoration: none; font-weight: 600; font-size: 14px;
+  background: linear-gradient(180deg, #fbfcff, #f4f7fc);
+  transition: all .14s ease;
+}
+.refs a:hover { border-color: var(--brand); transform: translateX(3px); box-shadow: var(--shadow); }
+.refs a::after { content: "  →"; color: var(--accent); }
+.refs a small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; margin-top: 2px; word-break: break-all; }
+
+/* Footer */
+footer.foot {
+  color: var(--muted); font-size: 12px; text-align: center; margin-top: 32px;
+  padding-top: 18px; border-top: 1px solid var(--line);
+}
+
+@media print {
+  body { background: white; }
+  .scorebar, .btn, .success-banner { display: none !important; }
+  section.card { box-shadow: none; border: 1px solid var(--line); page-break-inside: avoid; }
+  .hero { background: var(--brand); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .explain { display: block !important; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .hero h1 { font-size: 24px; }
+  .hero { padding: 24px 22px; }
+  .scorebar { font-size: 13px; padding: 12px 14px; }
+  section.card { padding: 22px 20px; }
+}
+
+/* Index page extras */
+.intro {
+  background: var(--bg-card); padding: 28px 32px; border-radius: 20px;
+  box-shadow: var(--shadow); margin-bottom: 22px;
+}
+.intro h1 { margin: 0 0 8px; font-size: 28px; color: var(--ink); }
+.intro p { margin: 0 0 6px; color: var(--ink-soft); }
+.modules-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.mod-card {
+  display: block; text-decoration: none; color: inherit;
+  background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow);
+  padding: 22px 24px; transition: transform .14s ease, box-shadow .14s ease;
+  border: 1px solid var(--line);
+  position: relative; overflow: hidden;
+}
+.mod-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-strong); }
+.mod-card .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--brand); color: white; border-radius: 8px;
+  font-size: 13px; font-weight: 800;
+}
+.mod-card h3 { font-size: 17px; font-weight: 700; margin: 12px 0 6px; color: var(--ink); }
+.mod-card .summary { color: var(--muted); font-style: italic; font-size: 13.5px; line-height: 1.5; }
+.mod-card .stat-row {
+  display: flex; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line);
+  font-size: 12px; color: var(--muted);
+}
+.mod-card .stat-row .stat { display: inline-flex; align-items: center; gap: 4px; }
+.completion {
+  display: none; position: absolute; top: 14px; right: 14px;
+  background: var(--good); color: white; padding: 4px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+}
+.mod-card.done .completion { display: inline-block; }
+.mod-card.done { border-color: var(--good); }
+.tot-progress {
+  background: white; border-radius: 14px; box-shadow: var(--shadow); padding: 14px 18px; margin-bottom: 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  font-size: 14px;
+}
+.tot-progress .bar-wrap { flex: 1; background: var(--line); border-radius: 999px; overflow: hidden; height: 10px; }
+.tot-progress .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent) 0%, var(--good) 100%); transition: width .4s ease; }
+.tot-progress .label { color: var(--muted); white-space: nowrap; }
+.tot-progress .label strong { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a href="index.html">← All modules</a>
+    <span class="brand-pill">AB-100 · Student Portal</span>
+  </div>
+
+  <div class="hero">
+    <span class="hero-mod">Module 10 of 11</span>
+    <h1>Design the ALM process for AI-powered business solutions</h1>
+    <p class="frame">Agents and prompts are production assets — they need ALM like any other workload.</p>
+  </div>
+
+  <div class="scorebar">
+    <span class="progress" id="progress-text"><strong>0</strong> of 8 answered</span>
+    <span class="score" id="score-text">Score: 0/8</span>
+    <span class="pct" id="pct-text">0%</span>
+    <button class="btn danger" onclick="resetAll()">Reset</button>
+  </div>
+
+  <div id="success-banner" class="success-banner">
+    <h3>Quiz complete</h3>
+    <p id="banner-text"></p>
+  </div>
+
+  <section class="card">
+    <h2><span class="icon">R</span>Recap — what to remember</h2>
+    <ul class="recap-list"><li>ALM applies to data, prompts, topics, custom models, and configurations.</li>
+<li>Solutions in Power Platform / Dataverse are the unit of deployment for Copilot Studio agents.</li>
+<li>Foundry agents have their own ALM with environments and pipelines.</li>
+<li>Dynamics 365 ALM extends to Copilot configuration in finance, supply chain, customer experience, and service.</li>
+<li>Source control + environments (dev / test / prod) + gated promotion + rollback are non-negotiable.</li></ul>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">K</span>Key concepts</h2>
+    <div class="concepts"><div class="concept"><div class="term">Solution (Power Platform)</div><div class="def">The unit of deployment for Copilot Studio agents across dev / test / prod.</div></div><div class="concept"><div class="term">Environment</div><div class="def">Isolated runtime — dev / test / prod — gated promotion is non-negotiable.</div></div><div class="concept"><div class="term">ALM for prompts</div><div class="def">Versioned, peer-reviewed, gated promotion. Prompts are code.</div></div><div class="concept"><div class="term">ALM for data</div><div class="def">Schema versions, lineage, refresh cadence, PII handling — its own lifecycle, not the agent&#x27;s.</div></div><div class="concept"><div class="term">Configuration migration</div><div class="def">Supported tools to package and move D365 Copilot configuration across environments.</div></div><div class="concept"><div class="term">Model artifact bundle</div><div class="def">Weights · training-data manifest · evaluation set · hyperparameters · prompt templates · deployment config — versioned together.</div></div></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">C</span>Cheat sheet — when…then</h2>
+    <div class="cheat"><div class="cheat-row"><div><strong>When deploying a Copilot Studio agent</strong> → solution → dev → test → prod, with rollback.</div></div><div class="cheat-row"><div><strong>When prompts change</strong> → require peer review and version control, not chat-based edits.</div></div><div class="cheat-row"><div><strong>When data schema changes</strong> → update lineage and refresh grounding pipelines.</div></div><div class="cheat-row"><div><strong>When models retrain</strong> → re-version the entire bundle, not just weights.</div></div><div class="cheat-row"><div><strong>When prod breaks</strong> → rollback to the previous solution version from a controlled artifact store.</div></div></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">Q</span>Practice quiz · 8 questions</h2>
+    <p class="q-meta">Tap an option to lock your answer. You'll see the right answer, why your pick is wrong (if it is), and reasoning for every option. Use <em>Reset</em> at the top to start the quiz over. Your progress saves automatically.</p>
+    
+<div class="q" id="q-0" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q1</span>Which is the canonical unit for moving a Copilot Studio agent through environments?</p>
+  <div class="options"><div class="option" onclick="pickOption(0,0)"><span class="letter">A</span><span>A copy-paste from screen</span></div>
+<div class="option" onclick="pickOption(0,1)"><span class="letter">B</span><span>A solution (Power Platform / Dataverse solution) exported and imported across dev/test/prod</span></div>
+<div class="option" onclick="pickOption(0,2)"><span class="letter">C</span><span>A USB stick</span></div>
+<div class="option" onclick="pickOption(0,3)"><span class="letter">D</span><span>An email attachment</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-1" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q2</span>An architect designs ALM for prompts. The MOST important property is:</p>
+  <div class="options"><div class="option" onclick="pickOption(1,0)"><span class="letter">A</span><span>Aesthetic prompts</span></div>
+<div class="option" onclick="pickOption(1,1)"><span class="letter">B</span><span>Versioning, peer review, and gated promotion — prompts are code</span></div>
+<div class="option" onclick="pickOption(1,2)"><span class="letter">C</span><span>Random prompts</span></div>
+<div class="option" onclick="pickOption(1,3)"><span class="letter">D</span><span>Prompts only in production</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-2" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q3</span>Fujitsu cut release cycles in half for Azure AI agents. Which ALM practice most likely contributed?</p>
+  <div class="options"><div class="option" onclick="pickOption(2,0)"><span class="letter">A</span><span>Manual deployment</span></div>
+<div class="option" onclick="pickOption(2,1)"><span class="letter">B</span><span>CI/CD pipelines in Azure DevOps with environment isolation and automated tests</span></div>
+<div class="option" onclick="pickOption(2,2)"><span class="letter">C</span><span>Slack approvals only</span></div>
+<div class="option" onclick="pickOption(2,3)"><span class="letter">D</span><span>No environments</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-3" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q4</span>Why is ALM for the data used by AI models / agents distinct from ALM for the agents themselves?</p>
+  <div class="options"><div class="option" onclick="pickOption(3,0)"><span class="letter">A</span><span>Data is sensitive — schema changes, lineage, refresh cadence, and PII handling have their own lifecycles</span></div>
+<div class="option" onclick="pickOption(3,1)"><span class="letter">B</span><span>Data has no lifecycle</span></div>
+<div class="option" onclick="pickOption(3,2)"><span class="letter">C</span><span>Microsoft says so</span></div>
+<div class="option" onclick="pickOption(3,3)"><span class="letter">D</span><span>It&#x27;s the same</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-4" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q5</span>Which environment progression is correct for a Copilot Studio agent?</p>
+  <div class="options"><div class="option" onclick="pickOption(4,0)"><span class="letter">A</span><span>prod → dev</span></div>
+<div class="option" onclick="pickOption(4,1)"><span class="letter">B</span><span>dev → test → prod with gated promotion and rollback</span></div>
+<div class="option" onclick="pickOption(4,2)"><span class="letter">C</span><span>Skip test</span></div>
+<div class="option" onclick="pickOption(4,3)"><span class="letter">D</span><span>prod only</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-5" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q6</span>ALM for D365 Finance Copilot configuration is BEST achieved by:</p>
+  <div class="options"><div class="option" onclick="pickOption(5,0)"><span class="letter">A</span><span>Hand-editing prod</span></div>
+<div class="option" onclick="pickOption(5,1)"><span class="letter">B</span><span>Using the supported configuration migration tools and packaging configuration into deployable assets</span></div>
+<div class="option" onclick="pickOption(5,2)"><span class="letter">C</span><span>Email approvals</span></div>
+<div class="option" onclick="pickOption(5,3)"><span class="letter">D</span><span>No tooling</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-6" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q7</span>An architect designs ALM for a custom Foundry model. Which artifacts must be versioned?</p>
+  <div class="options"><div class="option" onclick="pickOption(6,0)"><span class="letter">A</span><span>Just the trained weights</span></div>
+<div class="option" onclick="pickOption(6,1)"><span class="letter">B</span><span>Model weights, training data manifest, evaluation set, hyperparameters, prompt templates, deployment config — all versioned together</span></div>
+<div class="option" onclick="pickOption(6,2)"><span class="letter">C</span><span>None</span></div>
+<div class="option" onclick="pickOption(6,3)"><span class="letter">D</span><span>Only the deployment config</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-7" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q8</span>What is the BEST rollback strategy for an agent change that goes wrong in production?</p>
+  <div class="options"><div class="option" onclick="pickOption(7,0)"><span class="letter">A</span><span>Manually undo by memory</span></div>
+<div class="option" onclick="pickOption(7,1)"><span class="letter">B</span><span>Promote the previous solution version from a controlled artifact store, after monitoring confirms regression</span></div>
+<div class="option" onclick="pickOption(7,2)"><span class="letter">C</span><span>Restart the server</span></div>
+<div class="option" onclick="pickOption(7,3)"><span class="letter">D</span><span>Disable Copilot</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+  </section>
+
+  <section class="card refs">
+    <h2><span class="icon">→</span>Further reading on Microsoft Learn</h2>
+    <a href="https://learn.microsoft.com/en-us/power-platform/alm/overview-alm" target="_blank" rel="noopener">Power Platform ALM<small>https://learn.microsoft.com/en-us/power-platform/alm/overview-alm</small></a><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-fundamentals-publish-channels" target="_blank" rel="noopener">Copilot Studio publishing &amp; channels (ALM)<small>https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-fundamentals-publish-channels</small></a><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/deployments-overview" target="_blank" rel="noopener">Azure AI Foundry deployment<small>https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/deployments-overview</small></a><a href="https://learn.microsoft.com/en-us/power-platform/admin/manage-configuration-data" target="_blank" rel="noopener">D365 configuration migration<small>https://learn.microsoft.com/en-us/power-platform/admin/manage-configuration-data</small></a>
+  </section>
+
+  <footer class="foot">
+    AB-100 — Architecting agentic AI business solutions · Microsoft customer stories used as use cases.<br>
+    Self-paced — open this page as many times as you want. Progress is saved in your browser.
+  </footer>
+</div>
+<script>
+const QUIZ_DATA = {"questions": [{"q": "Which is the canonical unit for moving a Copilot Studio agent through environments?", "options": ["A copy-paste from screen", "A solution (Power Platform / Dataverse solution) exported and imported across dev/test/prod", "A USB stick", "An email attachment"], "correct": 1, "explanations": ["No.", "Correct \u2014 solutions are the ALM unit; everything else is anti-pattern.", "No.", "No."]}, {"q": "An architect designs ALM for prompts. The MOST important property is:", "options": ["Aesthetic prompts", "Versioning, peer review, and gated promotion \u2014 prompts are code", "Random prompts", "Prompts only in production"], "correct": 1, "explanations": ["Wrong frame.", "Correct \u2014 prompts are first-class artifacts requiring source control and review.", "Reckless.", "Skips dev/test."]}, {"q": "Fujitsu cut release cycles in half for Azure AI agents. Which ALM practice most likely contributed?", "options": ["Manual deployment", "CI/CD pipelines in Azure DevOps with environment isolation and automated tests", "Slack approvals only", "No environments"], "correct": 1, "explanations": ["Slow.", "Correct \u2014 CI/CD with environments is the standard playbook.", "Approval \u2260 pipeline.", "Reckless."]}, {"q": "Why is ALM for the data used by AI models / agents distinct from ALM for the agents themselves?", "options": ["Data is sensitive \u2014 schema changes, lineage, refresh cadence, and PII handling have their own lifecycles", "Data has no lifecycle", "Microsoft says so", "It's the same"], "correct": 0, "explanations": ["Correct \u2014 data ALM has its own concerns (schema, lineage, PII, freshness) and must be designed.", "False.", "Not the rationale.", "False."]}, {"q": "Which environment progression is correct for a Copilot Studio agent?", "options": ["prod \u2192 dev", "dev \u2192 test \u2192 prod with gated promotion and rollback", "Skip test", "prod only"], "correct": 1, "explanations": ["Backwards.", "Correct.", "Reckless.", "Reckless."]}, {"q": "ALM for D365 Finance Copilot configuration is BEST achieved by:", "options": ["Hand-editing prod", "Using the supported configuration migration tools and packaging configuration into deployable assets", "Email approvals", "No tooling"], "correct": 1, "explanations": ["Reckless.", "Correct \u2014 D365 has supported configuration migration tooling that integrates with ALM.", "Approval \u2260 migration.", "Bad."]}, {"q": "An architect designs ALM for a custom Foundry model. Which artifacts must be versioned?", "options": ["Just the trained weights", "Model weights, training data manifest, evaluation set, hyperparameters, prompt templates, deployment config \u2014 all versioned together", "None", "Only the deployment config"], "correct": 1, "explanations": ["Weights without context aren't reproducible.", "Correct \u2014 full reproducibility requires the entire bundle.", "Bad.", "Incomplete."]}, {"q": "What is the BEST rollback strategy for an agent change that goes wrong in production?", "options": ["Manually undo by memory", "Promote the previous solution version from a controlled artifact store, after monitoring confirms regression", "Restart the server", "Disable Copilot"], "correct": 1, "explanations": ["Memory rollbacks miss state.", "Correct \u2014 controlled artifacts + monitored rollback is the design.", "Restart doesn't roll back configuration.", "Nuclear."]}]};
+const MODULE_NUM = 10;
+const totalQ = QUIZ_DATA.questions.length;
+const STORE_KEY = "ab100-progress-mod-" + MODULE_NUM;
+
+let answered = 0;
+let correct = 0;
+let userAnswers = {}; // qIndex -> chosenIndex
+
+function saveProgress() {
+  try {
+    const p = { answered, correct, totalQ, userAnswers, savedAt: Date.now() };
+    localStorage.setItem(STORE_KEY, JSON.stringify(p));
+    // also a global completion record
+    const all = JSON.parse(localStorage.getItem("ab100-progress-all") || "{}");
+    all["m" + MODULE_NUM] = { score: correct, total: totalQ, answered, complete: answered === totalQ, at: Date.now() };
+    localStorage.setItem("ab100-progress-all", JSON.stringify(all));
+  } catch(e) {}
+}
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    if (!p || !p.userAnswers) return;
+    userAnswers = p.userAnswers || {};
+    Object.keys(userAnswers).forEach(k => {
+      const qi = parseInt(k);
+      const oi = userAnswers[k];
+      applyAnswerVisuals(qi, oi);
+    });
+  } catch(e) {}
+}
+
+function applyAnswerVisuals(qi, oi) {
+  const q = QUIZ_DATA.questions[qi];
+  const block = document.getElementById('q-' + qi);
+  if (!block || block.dataset.locked === '1') return;
+  block.dataset.locked = '1';
+  const opts = block.querySelectorAll('.option');
+  opts.forEach((el, i) => {
+    el.classList.add('locked');
+    if (i === q.correct) el.classList.add('correct');
+    else if (i === oi) el.classList.add('wrong');
+    else el.classList.add('disabled');
+  });
+  const expl = block.querySelector('.explain');
+  expl.style.display = 'block';
+  const isRight = oi === q.correct;
+  expl.classList.remove('right', 'wrong');
+  expl.classList.add(isRight ? 'right' : 'wrong');
+  let out = '';
+  out += '<div><span class="verdict">' + (isRight ? 'Correct' : 'Not quite') + '</span>' + q.explanations[q.correct] + '</div>';
+  if (!isRight) {
+    out += '<div style="margin-top:10px;"><strong>Why your pick is wrong:</strong> ' + q.explanations[oi] + '</div>';
+  }
+  out += '<details><summary>See reasoning for every option</summary><ul>';
+  for (let i = 0; i < q.options.length; i++) {
+    const tag = (i === q.correct) ? ' (correct)' : '';
+    out += '<li><strong>' + String.fromCharCode(65+i) + ')' + tag + '</strong> ' + q.explanations[i] + '</li>';
+  }
+  out += '</ul></details>';
+  expl.innerHTML = out;
+  if (typeof userAnswers[qi] === 'undefined') {
+    answered += 1;
+    if (isRight) correct += 1;
+  }
+  renderScorebar();
+}
+
+function pickOption(qi, oi) {
+  const block = document.getElementById('q-' + qi);
+  if (block.dataset.locked === '1') return;
+  applyAnswerVisuals(qi, oi);
+  userAnswers[qi] = oi;
+  saveProgress();
+}
+
+function resetAll() {
+  if (!confirm("Reset this quiz? All your answers will be cleared.")) return;
+  for (let i = 0; i < totalQ; i++) {
+    const block = document.getElementById('q-' + i);
+    if (block.dataset.locked === '1') {
+      block.dataset.locked = '0';
+      block.querySelectorAll('.option').forEach(el => { el.className = 'option'; });
+      const expl = block.querySelector('.explain');
+      expl.style.display = 'none';
+      expl.classList.remove('right', 'wrong');
+      expl.innerHTML = '';
+    }
+  }
+  answered = 0; correct = 0;
+  userAnswers = {};
+  saveProgress();
+  document.getElementById('success-banner').classList.remove('show');
+  renderScorebar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderScorebar() {
+  document.getElementById('progress-text').innerHTML = '<strong>' + answered + '</strong> of ' + totalQ + ' answered';
+  document.getElementById('score-text').textContent = 'Score: ' + correct + '/' + totalQ;
+  const pct = totalQ ? Math.round((correct/totalQ)*100) : 0;
+  document.getElementById('pct-text').textContent = pct + '%';
+  if (answered === totalQ) {
+    const banner = document.getElementById('success-banner');
+    banner.classList.add('show');
+    let msg = '';
+    if (correct === totalQ) msg = 'Perfect run. You know this module cold.';
+    else if (correct >= totalQ * 0.75) msg = 'Strong pass. Skim the explanations and you are ready.';
+    else if (correct >= totalQ * 0.5) msg = 'Halfway home. Re-read the recap and try again.';
+    else msg = 'Slow down — go back to the recap and key concepts before retrying.';
+    document.getElementById('banner-text').textContent =
+      'You scored ' + correct + '/' + totalQ + ' (' + pct + '%). ' + msg;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadProgress();
+  renderScorebar();
+});
+</script>
+</body>
+</html>

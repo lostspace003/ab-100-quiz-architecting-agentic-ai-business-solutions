@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AB-100 — Module 11 — Design responsible AI, security, governance, risk management, and compliance</title>
+<style>
+:root {
+  --ink: #0b1530;
+  --ink-soft: #2a3450;
+  --muted: #5b6478;
+  --line: #e6ebf4;
+  --bg: #f5f7fb;
+  --bg-card: #ffffff;
+  --brand: #1f3a68;
+  --brand-soft: #2c4f8c;
+  --accent: #0078d4;
+  --good: #1f7e3a;
+  --good-soft: #e7f5ec;
+  --bad: #b03030;
+  --bad-soft: #fbeaea;
+  --warn: #b06000;
+  --warn-soft: #fff5e0;
+  --shadow: 0 6px 24px rgba(15, 29, 58, 0.08);
+  --shadow-strong: 0 12px 36px rgba(15, 29, 58, 0.14);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0; padding: 0; background: var(--bg); color: var(--ink); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 980px; margin: 0 auto; padding: 24px 22px 80px; }
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0 16px; border-bottom: 1px solid var(--line); margin-bottom: 22px;
+}
+.topbar a { color: var(--brand); font-weight: 600; text-decoration: none; font-size: 14px; }
+.topbar a:hover { text-decoration: underline; }
+.brand-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; background: var(--brand); color: white;
+  font-size: 11px; font-weight: 700; letter-spacing: .6px; border-radius: 999px; text-transform: uppercase;
+}
+.brand-pill::before {
+  content: ""; width: 8px; height: 8px; border-radius: 999px; background: #6ec1ff;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-soft) 60%, #3b6cae 100%);
+  color: white; border-radius: 20px; padding: 32px 32px; box-shadow: var(--shadow-strong);
+  margin-bottom: 24px; position: relative; overflow: hidden;
+}
+.hero::after {
+  content: ""; position: absolute; right: -80px; top: -80px; width: 280px; height: 280px;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%);
+}
+.hero-mod {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.18); padding: 5px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}
+.hero h1 { margin: 12px 0 6px; font-size: 30px; line-height: 1.2; font-weight: 700; }
+.hero .frame { font-size: 15px; opacity: 0.92; max-width: 680px; }
+
+/* Stickybar */
+.scorebar {
+  position: sticky; top: 12px; z-index: 20;
+  background: white; border-radius: 14px; box-shadow: var(--shadow);
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px; margin-bottom: 22px; gap: 12px; flex-wrap: wrap;
+}
+.scorebar .progress { color: var(--muted); }
+.scorebar .progress strong { color: var(--ink); }
+.scorebar .score { font-weight: 700; color: var(--brand); }
+.scorebar .pct { font-weight: 700; color: var(--accent); }
+
+/* Cards */
+section.card {
+  background: var(--bg-card); border-radius: 18px; box-shadow: var(--shadow);
+  padding: 26px 28px; margin-bottom: 22px;
+}
+section.card h2 {
+  font-size: 19px; color: var(--brand); margin: 0 0 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+section.card h2 .icon {
+  width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #e3ecf9, #d0deef);
+  display: inline-flex; align-items: center; justify-content: center; color: var(--brand);
+  font-size: 15px; font-weight: 800;
+}
+
+/* Recap */
+.recap-list { padding-left: 20px; margin: 0; }
+.recap-list li { margin: 8px 0; }
+.recap-list li::marker { color: var(--accent); font-weight: 700; }
+
+/* Key concepts grid */
+.concepts {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.concept {
+  border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+  background: linear-gradient(180deg, #fbfcff 0%, #f3f6fc 100%);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.concept:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.concept .term { font-weight: 700; color: var(--brand); margin-bottom: 4px; font-size: 14px; }
+.concept .def  { color: var(--ink-soft); font-size: 13.5px; }
+
+/* Cheat sheet */
+.cheat {
+  display: grid; gap: 10px;
+}
+.cheat-row {
+  display: grid; grid-template-columns: 1fr; gap: 8px; align-items: start;
+  background: linear-gradient(180deg, #fffaf0 0%, #fff5e0 100%);
+  border-left: 4px solid #c8a040; border-radius: 12px; padding: 12px 14px;
+  font-size: 14px; color: var(--ink-soft);
+}
+.cheat-row strong { color: var(--ink); }
+
+/* Quiz */
+.q-meta { color: var(--muted); font-size: 13.5px; margin: 0 0 16px; }
+.q { padding: 4px 0 6px; }
+.q + .q { border-top: 1px dashed var(--line); margin-top: 18px; padding-top: 16px; }
+.q-stem { font-weight: 600; color: var(--ink); margin: 0 0 12px; line-height: 1.5; }
+.q-num {
+  display: inline-block; background: #eef3fb; color: var(--brand); padding: 3px 10px;
+  border-radius: 999px; font-size: 12px; font-weight: 700; margin-right: 8px; vertical-align: 2px;
+}
+.options { display: flex; flex-direction: column; gap: 8px; }
+.option {
+  display: flex; align-items: flex-start; gap: 10px;
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px;
+  cursor: pointer; background: #fafbff; transition: all .15s ease;
+  font-size: 14.5px; line-height: 1.5;
+}
+.option:hover:not(.locked) {
+  border-color: var(--brand); background: #f1f5fc; transform: translateY(-1px);
+}
+.option .letter {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 6px; background: white; border: 1px solid var(--line);
+  font-weight: 700; font-size: 12px; color: var(--brand); flex-shrink: 0;
+}
+.option.locked { cursor: default; }
+.option.correct {
+  border-color: var(--good); background: var(--good-soft); color: #0c4a1c;
+}
+.option.correct .letter { background: var(--good); color: white; border-color: var(--good); }
+.option.wrong {
+  border-color: var(--bad); background: var(--bad-soft); color: #6c1414;
+}
+.option.wrong .letter { background: var(--bad); color: white; border-color: var(--bad); }
+.option.disabled { opacity: 0.55; }
+
+.explain {
+  margin-top: 12px; padding: 14px 16px; border-radius: 12px;
+  background: #f3f6fc; font-size: 14px;
+  border-left: 4px solid var(--brand);
+}
+.explain.right { background: var(--good-soft); border-left-color: var(--good); }
+.explain.wrong { background: var(--bad-soft); border-left-color: var(--bad); }
+.explain .verdict {
+  font-weight: 800; margin-right: 6px; text-transform: uppercase;
+  font-size: 12px; letter-spacing: .5px;
+}
+.explain.right .verdict { color: var(--good); }
+.explain.wrong .verdict { color: var(--bad); }
+.explain details { margin-top: 10px; }
+.explain summary {
+  cursor: pointer; font-size: 13px; color: var(--brand); font-weight: 600;
+  padding: 4px 0; outline: none;
+}
+.explain summary:hover { text-decoration: underline; }
+.explain ul { padding-left: 20px; margin: 6px 0 0; }
+.explain li { margin: 4px 0; font-size: 13px; line-height: 1.5; }
+.explain li strong { color: var(--ink); }
+
+
+/* Buttons */
+.btn {
+  padding: 9px 16px; border-radius: 10px; border: 1.5px solid var(--brand);
+  background: var(--brand); color: white; font-weight: 600; cursor: pointer;
+  font-size: 13.5px; transition: all .14s ease;
+}
+.btn:hover { background: #163056; transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn.ghost {
+  background: white; color: var(--brand);
+}
+.btn.ghost:hover { background: #eef3fb; }
+.btn.danger { border-color: var(--bad); background: var(--bad); }
+.btn.danger:hover { background: #821e1e; }
+
+/* Banners */
+.success-banner {
+  background: linear-gradient(135deg, #1f7e3a 0%, #14572a 100%); color: white;
+  border-radius: 16px; padding: 22px 26px; margin-bottom: 22px; display: none;
+  box-shadow: var(--shadow-strong);
+}
+.success-banner.show { display: block; }
+.success-banner h3 { margin: 0 0 6px; font-size: 22px; }
+.success-banner p { margin: 4px 0 0; opacity: 0.95; font-size: 14px; }
+
+/* Further reading */
+.refs a {
+  display: block; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px;
+  margin: 8px 0; color: var(--brand); text-decoration: none; font-weight: 600; font-size: 14px;
+  background: linear-gradient(180deg, #fbfcff, #f4f7fc);
+  transition: all .14s ease;
+}
+.refs a:hover { border-color: var(--brand); transform: translateX(3px); box-shadow: var(--shadow); }
+.refs a::after { content: "  →"; color: var(--accent); }
+.refs a small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; margin-top: 2px; word-break: break-all; }
+
+/* Footer */
+footer.foot {
+  color: var(--muted); font-size: 12px; text-align: center; margin-top: 32px;
+  padding-top: 18px; border-top: 1px solid var(--line);
+}
+
+@media print {
+  body { background: white; }
+  .scorebar, .btn, .success-banner { display: none !important; }
+  section.card { box-shadow: none; border: 1px solid var(--line); page-break-inside: avoid; }
+  .hero { background: var(--brand); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .explain { display: block !important; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .hero h1 { font-size: 24px; }
+  .hero { padding: 24px 22px; }
+  .scorebar { font-size: 13px; padding: 12px 14px; }
+  section.card { padding: 22px 20px; }
+}
+
+/* Index page extras */
+.intro {
+  background: var(--bg-card); padding: 28px 32px; border-radius: 20px;
+  box-shadow: var(--shadow); margin-bottom: 22px;
+}
+.intro h1 { margin: 0 0 8px; font-size: 28px; color: var(--ink); }
+.intro p { margin: 0 0 6px; color: var(--ink-soft); }
+.modules-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.mod-card {
+  display: block; text-decoration: none; color: inherit;
+  background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow);
+  padding: 22px 24px; transition: transform .14s ease, box-shadow .14s ease;
+  border: 1px solid var(--line);
+  position: relative; overflow: hidden;
+}
+.mod-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-strong); }
+.mod-card .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--brand); color: white; border-radius: 8px;
+  font-size: 13px; font-weight: 800;
+}
+.mod-card h3 { font-size: 17px; font-weight: 700; margin: 12px 0 6px; color: var(--ink); }
+.mod-card .summary { color: var(--muted); font-style: italic; font-size: 13.5px; line-height: 1.5; }
+.mod-card .stat-row {
+  display: flex; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line);
+  font-size: 12px; color: var(--muted);
+}
+.mod-card .stat-row .stat { display: inline-flex; align-items: center; gap: 4px; }
+.completion {
+  display: none; position: absolute; top: 14px; right: 14px;
+  background: var(--good); color: white; padding: 4px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+}
+.mod-card.done .completion { display: inline-block; }
+.mod-card.done { border-color: var(--good); }
+.tot-progress {
+  background: white; border-radius: 14px; box-shadow: var(--shadow); padding: 14px 18px; margin-bottom: 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  font-size: 14px;
+}
+.tot-progress .bar-wrap { flex: 1; background: var(--line); border-radius: 999px; overflow: hidden; height: 10px; }
+.tot-progress .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent) 0%, var(--good) 100%); transition: width .4s ease; }
+.tot-progress .label { color: var(--muted); white-space: nowrap; }
+.tot-progress .label strong { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a href="index.html">← All modules</a>
+    <span class="brand-pill">AB-100 · Student Portal</span>
+  </div>
+
+  <div class="hero">
+    <span class="hero-mod">Module 11 of 11</span>
+    <h1>Design responsible AI, security, governance, risk management, and compliance</h1>
+    <p class="frame">The hardest topic and the most important. Where the architect anchors ethics.</p>
+  </div>
+
+  <div class="scorebar">
+    <span class="progress" id="progress-text"><strong>0</strong> of 8 answered</span>
+    <span class="score" id="score-text">Score: 0/8</span>
+    <span class="pct" id="pct-text">0%</span>
+    <button class="btn danger" onclick="resetAll()">Reset</button>
+  </div>
+
+  <div id="success-banner" class="success-banner">
+    <h3>Quiz complete</h3>
+    <p id="banner-text"></p>
+  </div>
+
+  <section class="card">
+    <h2><span class="icon">R</span>Recap — what to remember</h2>
+    <ul class="recap-list"><li>Microsoft&#x27;s Responsible AI standard: fairness, reliability/safety, privacy/security, inclusiveness, transparency, accountability.</li>
+<li>Agent security covers identity, authorization, secret management, network isolation, content safety.</li>
+<li>Governance: who can build what, where, with which models, on which data.</li>
+<li>Vulnerabilities include prompt injection, jailbreaks, training-data poisoning, model exfiltration.</li>
+<li>Validate data residency and movement compliance in every region.</li>
+<li>Design audit trails for changes to models, prompts, and grounding data.</li></ul>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">K</span>Key concepts</h2>
+    <div class="concepts"><div class="concept"><div class="term">Microsoft Responsible AI principles (6)</div><div class="def">Fairness · Reliability and safety · Privacy and security · Inclusiveness · Transparency · Accountability.</div></div><div class="concept"><div class="term">Prompt injection</div><div class="def">Adversarial content embedded in tool data or input that manipulates the agent into ignoring instructions or leaking data.</div></div><div class="concept"><div class="term">Defense in depth</div><div class="def">Layered defenses: input filtering · content safety · output validation · least-privilege tools · monitoring.</div></div><div class="concept"><div class="term">Data residency</div><div class="def">Compliance constraint that data must remain in specified geographies; design Azure regions and flows accordingly.</div></div><div class="concept"><div class="term">Microsoft Purview</div><div class="def">Unified governance, classification, and DLP that controls what Copilot can see, share, and retain.</div></div><div class="concept"><div class="term">Audit trail</div><div class="def">Who changed what, when, why — for prompts, models, configurations, grounding data.</div></div><div class="concept"><div class="term">Identity passthrough / security trimming</div><div class="def">Agent only sees what the requesting user is allowed to see; the M365 Copilot pattern.</div></div></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">C</span>Cheat sheet — when…then</h2>
+    <div class="cheat"><div class="cheat-row"><div><strong>When designing security</strong> → apply defense in depth, never rely on one control.</div></div><div class="cheat-row"><div><strong>When data residency matters</strong> → choose Azure regions, validate flows, document for audit.</div></div><div class="cheat-row"><div><strong>When governing Copilot</strong> → Purview is your control plane.</div></div><div class="cheat-row"><div><strong>When grounding agents</strong> → implement identity passthrough and security trimming.</div></div><div class="cheat-row"><div><strong>When changes happen</strong> → log who/what/when/why for every prompt and model change.</div></div><div class="cheat-row"><div><strong>When prompt injection is the threat</strong> → add input filtering, content safety, output validation, least-privilege.</div></div></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">Q</span>Practice quiz · 8 questions</h2>
+    <p class="q-meta">Tap an option to lock your answer. You'll see the right answer, why your pick is wrong (if it is), and reasoning for every option. Use <em>Reset</em> at the top to start the quiz over. Your progress saves automatically.</p>
+    
+<div class="q" id="q-0" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q1</span>Which is NOT one of Microsoft&#x27;s six Responsible AI principles?</p>
+  <div class="options"><div class="option" onclick="pickOption(0,0)"><span class="letter">A</span><span>Fairness</span></div>
+<div class="option" onclick="pickOption(0,1)"><span class="letter">B</span><span>Reliability and safety</span></div>
+<div class="option" onclick="pickOption(0,2)"><span class="letter">C</span><span>Profitability</span></div>
+<div class="option" onclick="pickOption(0,3)"><span class="letter">D</span><span>Transparency</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-1" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q2</span>What is prompt injection?</p>
+  <div class="options"><div class="option" onclick="pickOption(1,0)"><span class="letter">A</span><span>A way to speed up models</span></div>
+<div class="option" onclick="pickOption(1,1)"><span class="letter">B</span><span>An attack where adversarial content embedded in a tool&#x27;s data or input manipulates the agent into ignoring instructions or leaking data</span></div>
+<div class="option" onclick="pickOption(1,2)"><span class="letter">C</span><span>A debugging feature</span></div>
+<div class="option" onclick="pickOption(1,3)"><span class="letter">D</span><span>A licensing tier</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-2" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q3</span>An NHS England team builds a clinical-letter agent. Which RAI / compliance concern is HIGHEST priority?</p>
+  <div class="options"><div class="option" onclick="pickOption(2,0)"><span class="letter">A</span><span>Brand color</span></div>
+<div class="option" onclick="pickOption(2,1)"><span class="letter">B</span><span>PHI handling, data residency, content safety, auditability, and clinician-in-the-loop accountability</span></div>
+<div class="option" onclick="pickOption(2,2)"><span class="letter">C</span><span>Token speed only</span></div>
+<div class="option" onclick="pickOption(2,3)"><span class="letter">D</span><span>Server location only</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-3" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q4</span>Which mitigation is MOST effective against prompt manipulation?</p>
+  <div class="options"><div class="option" onclick="pickOption(3,0)"><span class="letter">A</span><span>Just add a longer system prompt</span></div>
+<div class="option" onclick="pickOption(3,1)"><span class="letter">B</span><span>Layered defenses: input filtering, content safety, output validation, least-privilege tool access, and monitoring</span></div>
+<div class="option" onclick="pickOption(3,2)"><span class="letter">C</span><span>Disable Copilot</span></div>
+<div class="option" onclick="pickOption(3,3)"><span class="letter">D</span><span>Hope</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-4" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q5</span>A customer&#x27;s data must remain in the EU. The architect&#x27;s design must:</p>
+  <div class="options"><div class="option" onclick="pickOption(4,0)"><span class="letter">A</span><span>Ignore residency</span></div>
+<div class="option" onclick="pickOption(4,1)"><span class="letter">B</span><span>Choose Azure regions in the EU, validate that grounding sources and model endpoints stay in-region, and document the data flow for audit</span></div>
+<div class="option" onclick="pickOption(4,2)"><span class="letter">C</span><span>Move data to the US for speed</span></div>
+<div class="option" onclick="pickOption(4,3)"><span class="letter">D</span><span>Email the data to legal</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-5" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q6</span>Why is auditability essential for AI changes?</p>
+  <div class="options"><div class="option" onclick="pickOption(5,0)"><span class="letter">A</span><span>It looks nice</span></div>
+<div class="option" onclick="pickOption(5,1)"><span class="letter">B</span><span>Regulators, internal risk, and incident response need to know who changed what, when, and why — including prompts and grounding data</span></div>
+<div class="option" onclick="pickOption(5,2)"><span class="letter">C</span><span>It speeds up agents</span></div>
+<div class="option" onclick="pickOption(5,3)"><span class="letter">D</span><span>It&#x27;s optional</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-6" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q7</span>Commerzbank uses Microsoft Purview to govern Copilot in regulated workflows. Purview&#x27;s role here is BEST described as:</p>
+  <div class="options"><div class="option" onclick="pickOption(6,0)"><span class="letter">A</span><span>A frontend chat</span></div>
+<div class="option" onclick="pickOption(6,1)"><span class="letter">B</span><span>A unified data governance, classification, and DLP layer that lets the bank set what Copilot can see, share, and retain</span></div>
+<div class="option" onclick="pickOption(6,2)"><span class="letter">C</span><span>A model trainer</span></div>
+<div class="option" onclick="pickOption(6,3)"><span class="letter">D</span><span>A licensing tool</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-7" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q8</span>Which is the strongest design pattern to enforce least-privilege access on grounding data?</p>
+  <div class="options"><div class="option" onclick="pickOption(7,0)"><span class="letter">A</span><span>Give all agents tenant-admin</span></div>
+<div class="option" onclick="pickOption(7,1)"><span class="letter">B</span><span>Service-principal scoped roles, sensitivity labels, row-level security, and trimmed search — the agent only sees what the requesting user is allowed to see</span></div>
+<div class="option" onclick="pickOption(7,2)"><span class="letter">C</span><span>Disable security</span></div>
+<div class="option" onclick="pickOption(7,3)"><span class="letter">D</span><span>Use a shared admin account</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+  </section>
+
+  <section class="card refs">
+    <h2><span class="icon">→</span>Further reading on Microsoft Learn</h2>
+    <a href="https://www.microsoft.com/en-us/ai/principles-and-approach" target="_blank" rel="noopener">Microsoft Responsible AI principles<small>https://www.microsoft.com/en-us/ai/principles-and-approach</small></a><a href="https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ai-agents/governance-security-across-organization" target="_blank" rel="noopener">AI agents — Governance and security<small>https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/ai-agents/governance-security-across-organization</small></a><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/security-and-governance" target="_blank" rel="noopener">Copilot Studio security and governance<small>https://learn.microsoft.com/en-us/microsoft-copilot-studio/security-and-governance</small></a><a href="https://www.microsoft.com/en-us/security/business/microsoft-secure-future-initiative" target="_blank" rel="noopener">Microsoft Secure Future Initiative<small>https://www.microsoft.com/en-us/security/business/microsoft-secure-future-initiative</small></a><a href="https://learn.microsoft.com/en-us/training/modules/purview-ai-developer-apps/investigate-respond-ai-activity" target="_blank" rel="noopener">Purview AI activity (investigate &amp; respond)<small>https://learn.microsoft.com/en-us/training/modules/purview-ai-developer-apps/investigate-respond-ai-activity</small></a>
+  </section>
+
+  <footer class="foot">
+    AB-100 — Architecting agentic AI business solutions · Microsoft customer stories used as use cases.<br>
+    Self-paced — open this page as many times as you want. Progress is saved in your browser.
+  </footer>
+</div>
+<script>
+const QUIZ_DATA = {"questions": [{"q": "Which is NOT one of Microsoft's six Responsible AI principles?", "options": ["Fairness", "Reliability and safety", "Profitability", "Transparency"], "correct": 2, "explanations": ["Yes, principle #1.", "Yes, principle #2.", "Correct \u2014 profitability isn't an RAI principle.", "Yes, principle #5."]}, {"q": "What is prompt injection?", "options": ["A way to speed up models", "An attack where adversarial content embedded in a tool's data or input manipulates the agent into ignoring instructions or leaking data", "A debugging feature", "A licensing tier"], "correct": 1, "explanations": ["No.", "Correct \u2014 prompt injection is the canonical agentic-AI vulnerability.", "No.", "No."]}, {"q": "An NHS England team builds a clinical-letter agent. Which RAI / compliance concern is HIGHEST priority?", "options": ["Brand color", "PHI handling, data residency, content safety, auditability, and clinician-in-the-loop accountability", "Token speed only", "Server location only"], "correct": 1, "explanations": ["Trivial.", "Correct \u2014 clinical scenarios stack PHI, residency, safety, and human accountability requirements.", "Speed is one input.", "Location is one input."]}, {"q": "Which mitigation is MOST effective against prompt manipulation?", "options": ["Just add a longer system prompt", "Layered defenses: input filtering, content safety, output validation, least-privilege tool access, and monitoring", "Disable Copilot", "Hope"], "correct": 1, "explanations": ["Necessary but insufficient.", "Correct \u2014 defense in depth is the only credible answer.", "Throws away value.", "No."]}, {"q": "A customer's data must remain in the EU. The architect's design must:", "options": ["Ignore residency", "Choose Azure regions in the EU, validate that grounding sources and model endpoints stay in-region, and document the data flow for audit", "Move data to the US for speed", "Email the data to legal"], "correct": 1, "explanations": ["Compliance breach.", "Correct \u2014 region selection + validated data flow + audit trail is the residency design.", "Compliance breach.", "Not a design."]}, {"q": "Why is auditability essential for AI changes?", "options": ["It looks nice", "Regulators, internal risk, and incident response need to know who changed what, when, and why \u2014 including prompts and grounding data", "It speeds up agents", "It's optional"], "correct": 1, "explanations": ["Wrong.", "Correct \u2014 audit trails are non-negotiable in regulated workloads.", "Doesn't.", "Not optional in regulated industries."]}, {"q": "Commerzbank uses Microsoft Purview to govern Copilot in regulated workflows. Purview's role here is BEST described as:", "options": ["A frontend chat", "A unified data governance, classification, and DLP layer that lets the bank set what Copilot can see, share, and retain", "A model trainer", "A licensing tool"], "correct": 1, "explanations": ["No.", "Correct \u2014 Purview governs the data plane Copilot operates on.", "No.", "No."]}, {"q": "Which is the strongest design pattern to enforce least-privilege access on grounding data?", "options": ["Give all agents tenant-admin", "Service-principal scoped roles, sensitivity labels, row-level security, and trimmed search \u2014 the agent only sees what the requesting user is allowed to see", "Disable security", "Use a shared admin account"], "correct": 1, "explanations": ["Catastrophic.", "Correct \u2014 identity passthrough and trimming is Microsoft's recommended pattern (think Microsoft 365 Copilot's security trimming).", "Catastrophic.", "Catastrophic."]}]};
+const MODULE_NUM = 11;
+const totalQ = QUIZ_DATA.questions.length;
+const STORE_KEY = "ab100-progress-mod-" + MODULE_NUM;
+
+let answered = 0;
+let correct = 0;
+let userAnswers = {}; // qIndex -> chosenIndex
+
+function saveProgress() {
+  try {
+    const p = { answered, correct, totalQ, userAnswers, savedAt: Date.now() };
+    localStorage.setItem(STORE_KEY, JSON.stringify(p));
+    // also a global completion record
+    const all = JSON.parse(localStorage.getItem("ab100-progress-all") || "{}");
+    all["m" + MODULE_NUM] = { score: correct, total: totalQ, answered, complete: answered === totalQ, at: Date.now() };
+    localStorage.setItem("ab100-progress-all", JSON.stringify(all));
+  } catch(e) {}
+}
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    if (!p || !p.userAnswers) return;
+    userAnswers = p.userAnswers || {};
+    Object.keys(userAnswers).forEach(k => {
+      const qi = parseInt(k);
+      const oi = userAnswers[k];
+      applyAnswerVisuals(qi, oi);
+    });
+  } catch(e) {}
+}
+
+function applyAnswerVisuals(qi, oi) {
+  const q = QUIZ_DATA.questions[qi];
+  const block = document.getElementById('q-' + qi);
+  if (!block || block.dataset.locked === '1') return;
+  block.dataset.locked = '1';
+  const opts = block.querySelectorAll('.option');
+  opts.forEach((el, i) => {
+    el.classList.add('locked');
+    if (i === q.correct) el.classList.add('correct');
+    else if (i === oi) el.classList.add('wrong');
+    else el.classList.add('disabled');
+  });
+  const expl = block.querySelector('.explain');
+  expl.style.display = 'block';
+  const isRight = oi === q.correct;
+  expl.classList.remove('right', 'wrong');
+  expl.classList.add(isRight ? 'right' : 'wrong');
+  let out = '';
+  out += '<div><span class="verdict">' + (isRight ? 'Correct' : 'Not quite') + '</span>' + q.explanations[q.correct] + '</div>';
+  if (!isRight) {
+    out += '<div style="margin-top:10px;"><strong>Why your pick is wrong:</strong> ' + q.explanations[oi] + '</div>';
+  }
+  out += '<details><summary>See reasoning for every option</summary><ul>';
+  for (let i = 0; i < q.options.length; i++) {
+    const tag = (i === q.correct) ? ' (correct)' : '';
+    out += '<li><strong>' + String.fromCharCode(65+i) + ')' + tag + '</strong> ' + q.explanations[i] + '</li>';
+  }
+  out += '</ul></details>';
+  expl.innerHTML = out;
+  if (typeof userAnswers[qi] === 'undefined') {
+    answered += 1;
+    if (isRight) correct += 1;
+  }
+  renderScorebar();
+}
+
+function pickOption(qi, oi) {
+  const block = document.getElementById('q-' + qi);
+  if (block.dataset.locked === '1') return;
+  applyAnswerVisuals(qi, oi);
+  userAnswers[qi] = oi;
+  saveProgress();
+}
+
+function resetAll() {
+  if (!confirm("Reset this quiz? All your answers will be cleared.")) return;
+  for (let i = 0; i < totalQ; i++) {
+    const block = document.getElementById('q-' + i);
+    if (block.dataset.locked === '1') {
+      block.dataset.locked = '0';
+      block.querySelectorAll('.option').forEach(el => { el.className = 'option'; });
+      const expl = block.querySelector('.explain');
+      expl.style.display = 'none';
+      expl.classList.remove('right', 'wrong');
+      expl.innerHTML = '';
+    }
+  }
+  answered = 0; correct = 0;
+  userAnswers = {};
+  saveProgress();
+  document.getElementById('success-banner').classList.remove('show');
+  renderScorebar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderScorebar() {
+  document.getElementById('progress-text').innerHTML = '<strong>' + answered + '</strong> of ' + totalQ + ' answered';
+  document.getElementById('score-text').textContent = 'Score: ' + correct + '/' + totalQ;
+  const pct = totalQ ? Math.round((correct/totalQ)*100) : 0;
+  document.getElementById('pct-text').textContent = pct + '%';
+  if (answered === totalQ) {
+    const banner = document.getElementById('success-banner');
+    banner.classList.add('show');
+    let msg = '';
+    if (correct === totalQ) msg = 'Perfect run. You know this module cold.';
+    else if (correct >= totalQ * 0.75) msg = 'Strong pass. Skim the explanations and you are ready.';
+    else if (correct >= totalQ * 0.5) msg = 'Halfway home. Re-read the recap and try again.';
+    else msg = 'Slow down — go back to the recap and key concepts before retrying.';
+    document.getElementById('banner-text').textContent =
+      'You scored ' + correct + '/' + totalQ + ' (' + pct + '%). ' + msg;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadProgress();
+  renderScorebar();
+});
+</script>
+</body>
+</html>

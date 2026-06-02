@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AB-100 — Module 1 — Introduction to Agentic AI Business Solution Architecture</title>
+<style>
+:root {
+  --ink: #0b1530;
+  --ink-soft: #2a3450;
+  --muted: #5b6478;
+  --line: #e6ebf4;
+  --bg: #f5f7fb;
+  --bg-card: #ffffff;
+  --brand: #1f3a68;
+  --brand-soft: #2c4f8c;
+  --accent: #0078d4;
+  --good: #1f7e3a;
+  --good-soft: #e7f5ec;
+  --bad: #b03030;
+  --bad-soft: #fbeaea;
+  --warn: #b06000;
+  --warn-soft: #fff5e0;
+  --shadow: 0 6px 24px rgba(15, 29, 58, 0.08);
+  --shadow-strong: 0 12px 36px rgba(15, 29, 58, 0.14);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0; padding: 0; background: var(--bg); color: var(--ink); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 980px; margin: 0 auto; padding: 24px 22px 80px; }
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0 16px; border-bottom: 1px solid var(--line); margin-bottom: 22px;
+}
+.topbar a { color: var(--brand); font-weight: 600; text-decoration: none; font-size: 14px; }
+.topbar a:hover { text-decoration: underline; }
+.brand-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; background: var(--brand); color: white;
+  font-size: 11px; font-weight: 700; letter-spacing: .6px; border-radius: 999px; text-transform: uppercase;
+}
+.brand-pill::before {
+  content: ""; width: 8px; height: 8px; border-radius: 999px; background: #6ec1ff;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-soft) 60%, #3b6cae 100%);
+  color: white; border-radius: 20px; padding: 32px 32px; box-shadow: var(--shadow-strong);
+  margin-bottom: 24px; position: relative; overflow: hidden;
+}
+.hero::after {
+  content: ""; position: absolute; right: -80px; top: -80px; width: 280px; height: 280px;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%);
+}
+.hero-mod {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.18); padding: 5px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}
+.hero h1 { margin: 12px 0 6px; font-size: 30px; line-height: 1.2; font-weight: 700; }
+.hero .frame { font-size: 15px; opacity: 0.92; max-width: 680px; }
+
+/* Stickybar */
+.scorebar {
+  position: sticky; top: 12px; z-index: 20;
+  background: white; border-radius: 14px; box-shadow: var(--shadow);
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px; margin-bottom: 22px; gap: 12px; flex-wrap: wrap;
+}
+.scorebar .progress { color: var(--muted); }
+.scorebar .progress strong { color: var(--ink); }
+.scorebar .score { font-weight: 700; color: var(--brand); }
+.scorebar .pct { font-weight: 700; color: var(--accent); }
+
+/* Cards */
+section.card {
+  background: var(--bg-card); border-radius: 18px; box-shadow: var(--shadow);
+  padding: 26px 28px; margin-bottom: 22px;
+}
+section.card h2 {
+  font-size: 19px; color: var(--brand); margin: 0 0 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+section.card h2 .icon {
+  width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #e3ecf9, #d0deef);
+  display: inline-flex; align-items: center; justify-content: center; color: var(--brand);
+  font-size: 15px; font-weight: 800;
+}
+
+/* Recap */
+.recap-list { padding-left: 20px; margin: 0; }
+.recap-list li { margin: 8px 0; }
+.recap-list li::marker { color: var(--accent); font-weight: 700; }
+
+/* Key concepts grid */
+.concepts {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.concept {
+  border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+  background: linear-gradient(180deg, #fbfcff 0%, #f3f6fc 100%);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.concept:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.concept .term { font-weight: 700; color: var(--brand); margin-bottom: 4px; font-size: 14px; }
+.concept .def  { color: var(--ink-soft); font-size: 13.5px; }
+
+/* Cheat sheet */
+.cheat {
+  display: grid; gap: 10px;
+}
+.cheat-row {
+  display: grid; grid-template-columns: 1fr; gap: 8px; align-items: start;
+  background: linear-gradient(180deg, #fffaf0 0%, #fff5e0 100%);
+  border-left: 4px solid #c8a040; border-radius: 12px; padding: 12px 14px;
+  font-size: 14px; color: var(--ink-soft);
+}
+.cheat-row strong { color: var(--ink); }
+
+/* Quiz */
+.q-meta { color: var(--muted); font-size: 13.5px; margin: 0 0 16px; }
+.q { padding: 4px 0 6px; }
+.q + .q { border-top: 1px dashed var(--line); margin-top: 18px; padding-top: 16px; }
+.q-stem { font-weight: 600; color: var(--ink); margin: 0 0 12px; line-height: 1.5; }
+.q-num {
+  display: inline-block; background: #eef3fb; color: var(--brand); padding: 3px 10px;
+  border-radius: 999px; font-size: 12px; font-weight: 700; margin-right: 8px; vertical-align: 2px;
+}
+.options { display: flex; flex-direction: column; gap: 8px; }
+.option {
+  display: flex; align-items: flex-start; gap: 10px;
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px;
+  cursor: pointer; background: #fafbff; transition: all .15s ease;
+  font-size: 14.5px; line-height: 1.5;
+}
+.option:hover:not(.locked) {
+  border-color: var(--brand); background: #f1f5fc; transform: translateY(-1px);
+}
+.option .letter {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 6px; background: white; border: 1px solid var(--line);
+  font-weight: 700; font-size: 12px; color: var(--brand); flex-shrink: 0;
+}
+.option.locked { cursor: default; }
+.option.correct {
+  border-color: var(--good); background: var(--good-soft); color: #0c4a1c;
+}
+.option.correct .letter { background: var(--good); color: white; border-color: var(--good); }
+.option.wrong {
+  border-color: var(--bad); background: var(--bad-soft); color: #6c1414;
+}
+.option.wrong .letter { background: var(--bad); color: white; border-color: var(--bad); }
+.option.disabled { opacity: 0.55; }
+
+.explain {
+  margin-top: 12px; padding: 14px 16px; border-radius: 12px;
+  background: #f3f6fc; font-size: 14px;
+  border-left: 4px solid var(--brand);
+}
+.explain.right { background: var(--good-soft); border-left-color: var(--good); }
+.explain.wrong { background: var(--bad-soft); border-left-color: var(--bad); }
+.explain .verdict {
+  font-weight: 800; margin-right: 6px; text-transform: uppercase;
+  font-size: 12px; letter-spacing: .5px;
+}
+.explain.right .verdict { color: var(--good); }
+.explain.wrong .verdict { color: var(--bad); }
+.explain details { margin-top: 10px; }
+.explain summary {
+  cursor: pointer; font-size: 13px; color: var(--brand); font-weight: 600;
+  padding: 4px 0; outline: none;
+}
+.explain summary:hover { text-decoration: underline; }
+.explain ul { padding-left: 20px; margin: 6px 0 0; }
+.explain li { margin: 4px 0; font-size: 13px; line-height: 1.5; }
+.explain li strong { color: var(--ink); }
+
+
+/* Buttons */
+.btn {
+  padding: 9px 16px; border-radius: 10px; border: 1.5px solid var(--brand);
+  background: var(--brand); color: white; font-weight: 600; cursor: pointer;
+  font-size: 13.5px; transition: all .14s ease;
+}
+.btn:hover { background: #163056; transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn.ghost {
+  background: white; color: var(--brand);
+}
+.btn.ghost:hover { background: #eef3fb; }
+.btn.danger { border-color: var(--bad); background: var(--bad); }
+.btn.danger:hover { background: #821e1e; }
+
+/* Banners */
+.success-banner {
+  background: linear-gradient(135deg, #1f7e3a 0%, #14572a 100%); color: white;
+  border-radius: 16px; padding: 22px 26px; margin-bottom: 22px; display: none;
+  box-shadow: var(--shadow-strong);
+}
+.success-banner.show { display: block; }
+.success-banner h3 { margin: 0 0 6px; font-size: 22px; }
+.success-banner p { margin: 4px 0 0; opacity: 0.95; font-size: 14px; }
+
+/* Further reading */
+.refs a {
+  display: block; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px;
+  margin: 8px 0; color: var(--brand); text-decoration: none; font-weight: 600; font-size: 14px;
+  background: linear-gradient(180deg, #fbfcff, #f4f7fc);
+  transition: all .14s ease;
+}
+.refs a:hover { border-color: var(--brand); transform: translateX(3px); box-shadow: var(--shadow); }
+.refs a::after { content: "  →"; color: var(--accent); }
+.refs a small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; margin-top: 2px; word-break: break-all; }
+
+/* Footer */
+footer.foot {
+  color: var(--muted); font-size: 12px; text-align: center; margin-top: 32px;
+  padding-top: 18px; border-top: 1px solid var(--line);
+}
+
+@media print {
+  body { background: white; }
+  .scorebar, .btn, .success-banner { display: none !important; }
+  section.card { box-shadow: none; border: 1px solid var(--line); page-break-inside: avoid; }
+  .hero { background: var(--brand); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .explain { display: block !important; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .hero h1 { font-size: 24px; }
+  .hero { padding: 24px 22px; }
+  .scorebar { font-size: 13px; padding: 12px 14px; }
+  section.card { padding: 22px 20px; }
+}
+
+/* Index page extras */
+.intro {
+  background: var(--bg-card); padding: 28px 32px; border-radius: 20px;
+  box-shadow: var(--shadow); margin-bottom: 22px;
+}
+.intro h1 { margin: 0 0 8px; font-size: 28px; color: var(--ink); }
+.intro p { margin: 0 0 6px; color: var(--ink-soft); }
+.modules-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.mod-card {
+  display: block; text-decoration: none; color: inherit;
+  background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow);
+  padding: 22px 24px; transition: transform .14s ease, box-shadow .14s ease;
+  border: 1px solid var(--line);
+  position: relative; overflow: hidden;
+}
+.mod-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-strong); }
+.mod-card .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--brand); color: white; border-radius: 8px;
+  font-size: 13px; font-weight: 800;
+}
+.mod-card h3 { font-size: 17px; font-weight: 700; margin: 12px 0 6px; color: var(--ink); }
+.mod-card .summary { color: var(--muted); font-style: italic; font-size: 13.5px; line-height: 1.5; }
+.mod-card .stat-row {
+  display: flex; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line);
+  font-size: 12px; color: var(--muted);
+}
+.mod-card .stat-row .stat { display: inline-flex; align-items: center; gap: 4px; }
+.completion {
+  display: none; position: absolute; top: 14px; right: 14px;
+  background: var(--good); color: white; padding: 4px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+}
+.mod-card.done .completion { display: inline-block; }
+.mod-card.done { border-color: var(--good); }
+.tot-progress {
+  background: white; border-radius: 14px; box-shadow: var(--shadow); padding: 14px 18px; margin-bottom: 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  font-size: 14px;
+}
+.tot-progress .bar-wrap { flex: 1; background: var(--line); border-radius: 999px; overflow: hidden; height: 10px; }
+.tot-progress .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent) 0%, var(--good) 100%); transition: width .4s ease; }
+.tot-progress .label { color: var(--muted); white-space: nowrap; }
+.tot-progress .label strong { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a href="index.html">← All modules</a>
+    <span class="brand-pill">AB-100 · Student Portal</span>
+  </div>
+
+  <div class="hero">
+    <span class="hero-mod">Module 1 of 11</span>
+    <h1>Introduction to Agentic AI Business Solution Architecture</h1>
+    <p class="frame">The architect is the bridge between business strategy and AI delivery.</p>
+  </div>
+
+  <div class="scorebar">
+    <span class="progress" id="progress-text"><strong>0</strong> of 8 answered</span>
+    <span class="score" id="score-text">Score: 0/8</span>
+    <span class="pct" id="pct-text">0%</span>
+    <button class="btn danger" onclick="resetAll()">Reset</button>
+  </div>
+
+  <div id="success-banner" class="success-banner">
+    <h3>Quiz complete</h3>
+    <p id="banner-text"></p>
+  </div>
+
+  <section class="card">
+    <h2><span class="icon">R</span>Recap — what to remember</h2>
+    <ul class="recap-list"><li>AI architects align AI with business goals, not the other way around.</li>
+<li>Their core duties: vision, data readiness, integration, responsible AI, KPIs, alignment.</li>
+<li>AI transformation is a five-phase loop: define goals → strategy → architecture → implement → monitor and optimize.</li>
+<li>Best practices: start with measurable outcomes, modular design, responsible AI, collaboration, leverage Azure AI services.</li>
+<li>Microsoft AI surfaces: Microsoft 365 Copilot, Copilot Studio, Microsoft Foundry (and Foundry Tools), Dynamics 365 Copilots, Power Platform AI.</li>
+<li>Out-of-the-box agents exist across Microsoft 365 and Dynamics 365 — extend before you build.</li></ul>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">K</span>Key concepts</h2>
+    <div class="concepts"><div class="concept"><div class="term">AI architect</div><div class="def">Translates business strategy into a scalable, secure, responsibly-governed AI design that developers can implement.</div></div><div class="concept"><div class="term">Agentic AI</div><div class="def">AI systems that pursue goals across multiple steps with tools and decisions, not just one-turn responses.</div></div><div class="concept"><div class="term">Microsoft 365 Copilot</div><div class="def">Microsoft&#x27;s productivity Copilot embedded in Word, Excel, Outlook, Teams, and PowerPoint.</div></div><div class="concept"><div class="term">Copilot Studio</div><div class="def">Low-code surface to build and customize agents and topics for business users.</div></div><div class="concept"><div class="term">Microsoft Foundry</div><div class="def">Pro-dev platform for custom models, agents, evaluation, and agent tooling.</div></div><div class="concept"><div class="term">Out-of-the-Box (OOB) agent</div><div class="def">An agent or Copilot Microsoft already ships, configurable rather than built from scratch.</div></div><div class="concept"><div class="term">Responsible AI</div><div class="def">Microsoft&#x27;s six-principle standard for fairness, reliability/safety, privacy/security, inclusiveness, transparency, accountability.</div></div><div class="concept"><div class="term">AI Center of Excellence</div><div class="def">A cross-functional team that owns strategy, governance, platform, prompt engineering, RAI, and enablement for an organization&#x27;s AI.</div></div></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">C</span>Cheat sheet — when…then</h2>
+    <div class="cheat"><div class="cheat-row"><div><strong>When a customer says &#x27;we want AI&#x27;</strong> → first ask: what business outcome are we measuring?</div></div><div class="cheat-row"><div><strong>When the data is scattered across systems</strong> → assess data readiness BEFORE designing the agent.</div></div><div class="cheat-row"><div><strong>When users live in M365</strong> → start with Microsoft 365 Copilot, extend before building.</div></div><div class="cheat-row"><div><strong>When the request is bounded and configurable</strong> → prefer an OOB agent; build only the gap.</div></div><div class="cheat-row"><div><strong>When governance is skipped</strong> → push back; it is requirements, not an afterthought.</div></div></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">Q</span>Practice quiz · 8 questions</h2>
+    <p class="q-meta">Tap an option to lock your answer. You'll see the right answer, why your pick is wrong (if it is), and reasoning for every option. Use <em>Reset</em> at the top to start the quiz over. Your progress saves automatically.</p>
+    
+<div class="q" id="q-0" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q1</span>Lumen Technologies cut sales-research time from 4 hours to 15 minutes per deal using Microsoft 365 Copilot. What is the architect&#x27;s most important role in a project like this?</p>
+  <div class="options"><div class="option" onclick="pickOption(0,0)"><span class="letter">A</span><span>Write the prompts the sellers will use</span></div>
+<div class="option" onclick="pickOption(0,1)"><span class="letter">B</span><span>Align the Copilot rollout with measurable business outcomes and integrate it with existing CRM workflows</span></div>
+<div class="option" onclick="pickOption(0,2)"><span class="letter">C</span><span>Train the underlying language model with Lumen&#x27;s data</span></div>
+<div class="option" onclick="pickOption(0,3)"><span class="letter">D</span><span>Pick the cheapest license tier</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-1" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q2</span>Which of the following is NOT one of the five phases of the AI transformation framework taught in this module?</p>
+  <div class="options"><div class="option" onclick="pickOption(1,0)"><span class="letter">A</span><span>Define business goals</span></div>
+<div class="option" onclick="pickOption(1,1)"><span class="letter">B</span><span>Develop AI strategy</span></div>
+<div class="option" onclick="pickOption(1,2)"><span class="letter">C</span><span>Buy a model from a vendor</span></div>
+<div class="option" onclick="pickOption(1,3)"><span class="letter">D</span><span>Monitor and optimize performance</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-2" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q3</span>An AI architect joins a project where the business team wants a Copilot Studio agent for HR queries, but the HR data is scattered across SharePoint, ServiceNow, and Excel. What should the architect do FIRST?</p>
+  <div class="options"><div class="option" onclick="pickOption(2,0)"><span class="letter">A</span><span>Build the agent and connect it later</span></div>
+<div class="option" onclick="pickOption(2,1)"><span class="letter">B</span><span>Assess data readiness — accuracy, relevance, timeliness, cleanliness, availability — before designing the agent</span></div>
+<div class="option" onclick="pickOption(2,2)"><span class="letter">C</span><span>Recommend Azure OpenAI instead</span></div>
+<div class="option" onclick="pickOption(2,3)"><span class="letter">D</span><span>Ask HR to centralize all data into Dynamics 365</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-3" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q4</span>Which Microsoft surface is best described as &#x27;low-code authoring of custom agents and topics for business users&#x27;?</p>
+  <div class="options"><div class="option" onclick="pickOption(3,0)"><span class="letter">A</span><span>Microsoft Foundry</span></div>
+<div class="option" onclick="pickOption(3,1)"><span class="letter">B</span><span>Microsoft 365 Copilot</span></div>
+<div class="option" onclick="pickOption(3,2)"><span class="letter">C</span><span>Copilot Studio</span></div>
+<div class="option" onclick="pickOption(3,3)"><span class="letter">D</span><span>Azure OpenAI Service</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-4" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q5</span>Vodafone rolled Microsoft 365 Copilot to 68,000 employees only after a 16-week pilot. Which architect best practice does this most clearly demonstrate?</p>
+  <div class="options"><div class="option" onclick="pickOption(4,0)"><span class="letter">A</span><span>Always go big-bang to maximize impact</span></div>
+<div class="option" onclick="pickOption(4,1)"><span class="letter">B</span><span>Start with measurable outcomes and pilot before scaling</span></div>
+<div class="option" onclick="pickOption(4,2)"><span class="letter">C</span><span>Build a custom model first</span></div>
+<div class="option" onclick="pickOption(4,3)"><span class="letter">D</span><span>Use only on-premise services</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-5" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q6</span>A customer asks: &#x27;Why do we need an AI architect — can&#x27;t our developers just build it?&#x27; What is the strongest one-line answer?</p>
+  <div class="options"><div class="option" onclick="pickOption(5,0)"><span class="letter">A</span><span>Architects write better code than developers</span></div>
+<div class="option" onclick="pickOption(5,1)"><span class="letter">B</span><span>Architects make the project more expensive</span></div>
+<div class="option" onclick="pickOption(5,2)"><span class="letter">C</span><span>Architects translate business strategy into a scalable, secure, responsibly-governed AI design developers can implement</span></div>
+<div class="option" onclick="pickOption(5,3)"><span class="letter">D</span><span>Architects are only needed for compliance</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-6" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q7</span>Which of the following is an example of an out-of-the-box (OOB) Microsoft AI agent rather than a custom build?</p>
+  <div class="options"><div class="option" onclick="pickOption(6,0)"><span class="letter">A</span><span>A Copilot Studio agent built for a regional bank</span></div>
+<div class="option" onclick="pickOption(6,1)"><span class="letter">B</span><span>Copilot in Dynamics 365 Sales — provided by Microsoft and configurable</span></div>
+<div class="option" onclick="pickOption(6,2)"><span class="letter">C</span><span>A fine-tuned custom model in Foundry</span></div>
+<div class="option" onclick="pickOption(6,3)"><span class="letter">D</span><span>A Power Apps canvas app with AI Builder prompts</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-7" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q8</span>Which statement best captures &#x27;responsible AI&#x27; in the architect&#x27;s daily job?</p>
+  <div class="options"><div class="option" onclick="pickOption(7,0)"><span class="letter">A</span><span>A separate compliance team handles it after the build</span></div>
+<div class="option" onclick="pickOption(7,1)"><span class="letter">B</span><span>It&#x27;s an annual checkbox audit</span></div>
+<div class="option" onclick="pickOption(7,2)"><span class="letter">C</span><span>Fairness, transparency, accountability, and safety are designed into every agent and reviewed continuously</span></div>
+<div class="option" onclick="pickOption(7,3)"><span class="letter">D</span><span>It only applies to healthcare scenarios</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+  </section>
+
+  <section class="card refs">
+    <h2><span class="icon">→</span>Further reading on Microsoft Learn</h2>
+    <a href="https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/ai/" target="_blank" rel="noopener">AI Adoption — Cloud Adoption Framework<small>https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/ai/</small></a><a href="https://www.microsoft.com/en-us/ai/principles-and-approach" target="_blank" rel="noopener">Microsoft Responsible AI principles<small>https://www.microsoft.com/en-us/ai/principles-and-approach</small></a><a href="https://www.microsoft.com/en-us/microsoft-copilot/blog/copilot-studio/explore-agents-pre-built-for-you-in-microsoft-copilot-studio/" target="_blank" rel="noopener">Pre-built agents in Copilot Studio<small>https://www.microsoft.com/en-us/microsoft-copilot/blog/copilot-studio/explore-agents-pre-built-for-you-in-microsoft-copilot-studio/</small></a><a href="https://www.microsoft.com/en-us/ai" target="_blank" rel="noopener">Microsoft AI overview<small>https://www.microsoft.com/en-us/ai</small></a>
+  </section>
+
+  <footer class="foot">
+    AB-100 — Architecting agentic AI business solutions · Microsoft customer stories used as use cases.<br>
+    Self-paced — open this page as many times as you want. Progress is saved in your browser.
+  </footer>
+</div>
+<script>
+const QUIZ_DATA = {"questions": [{"q": "Lumen Technologies cut sales-research time from 4 hours to 15 minutes per deal using Microsoft 365 Copilot. What is the architect's most important role in a project like this?", "options": ["Write the prompts the sellers will use", "Align the Copilot rollout with measurable business outcomes and integrate it with existing CRM workflows", "Train the underlying language model with Lumen's data", "Pick the cheapest license tier"], "correct": 1, "explanations": ["Prompt authoring is a Copilot-Studio task, not the architect's primary role.", "Correct \u2014 architects align AI initiatives with business KPIs and integrate them with current systems. Lumen's $50M productivity gain came from that alignment, not from any single feature.", "Microsoft 365 Copilot uses Microsoft-managed models; customers don't train them.", "Cost matters but is one input among many \u2014 the architect's job is much broader."]}, {"q": "Which of the following is NOT one of the five phases of the AI transformation framework taught in this module?", "options": ["Define business goals", "Develop AI strategy", "Buy a model from a vendor", "Monitor and optimize performance"], "correct": 2, "explanations": ["This is phase 1.", "This is phase 2.", "Correct \u2014 buying a model is a tactical decision inside 'design architecture' and 'implement', not a phase.", "This is the final phase and feeds back into the loop."]}, {"q": "An AI architect joins a project where the business team wants a Copilot Studio agent for HR queries, but the HR data is scattered across SharePoint, ServiceNow, and Excel. What should the architect do FIRST?", "options": ["Build the agent and connect it later", "Assess data readiness \u2014 accuracy, relevance, timeliness, cleanliness, availability \u2014 before designing the agent", "Recommend Azure OpenAI instead", "Ask HR to centralize all data into Dynamics 365"], "correct": 1, "explanations": ["Building before knowing the data shape almost always burns cycles.", "Correct \u2014 data readiness is one of the architect's core responsibilities and the most common reason AI projects fail.", "The choice of platform comes after requirements + data assessment, not before.", "Centralizing all data is unrealistic and probably unnecessary; grounding can work across multiple sources."]}, {"q": "Which Microsoft surface is best described as 'low-code authoring of custom agents and topics for business users'?", "options": ["Microsoft Foundry", "Microsoft 365 Copilot", "Copilot Studio", "Azure OpenAI Service"], "correct": 2, "explanations": ["Foundry is for pro-dev and custom-model work.", "Microsoft 365 Copilot is the productivity Copilot, not an agent-authoring tool.", "Correct \u2014 Copilot Studio is the low-code agent and topic builder.", "Azure OpenAI is a model API, not an agent builder."]}, {"q": "Vodafone rolled Microsoft 365 Copilot to 68,000 employees only after a 16-week pilot. Which architect best practice does this most clearly demonstrate?", "options": ["Always go big-bang to maximize impact", "Start with measurable outcomes and pilot before scaling", "Build a custom model first", "Use only on-premise services"], "correct": 1, "explanations": ["Big-bang rollouts of generative AI rarely succeed \u2014 Vodafone explicitly piloted first.", "Correct \u2014 measurable pilots are a core architect best practice for scaling AI safely.", "M365 Copilot uses Microsoft-managed models; no custom model required.", "M365 Copilot is cloud-based by design."]}, {"q": "A customer asks: 'Why do we need an AI architect \u2014 can't our developers just build it?' What is the strongest one-line answer?", "options": ["Architects write better code than developers", "Architects make the project more expensive", "Architects translate business strategy into a scalable, secure, responsibly-governed AI design developers can implement", "Architects are only needed for compliance"], "correct": 2, "explanations": ["Coding quality is not the architect's value prop.", "Architects reduce overall cost by avoiding rework.", "Correct \u2014 that translation is the heart of the role and the trainer guide's framing.", "Compliance is one slice; the role is much broader."]}, {"q": "Which of the following is an example of an out-of-the-box (OOB) Microsoft AI agent rather than a custom build?", "options": ["A Copilot Studio agent built for a regional bank", "Copilot in Dynamics 365 Sales \u2014 provided by Microsoft and configurable", "A fine-tuned custom model in Foundry", "A Power Apps canvas app with AI Builder prompts"], "correct": 1, "explanations": ["That's a custom-built Copilot Studio agent.", "Correct \u2014 Copilot in Dynamics 365 Sales is shipped and configured, not built from scratch.", "Custom models are by definition not OOB.", "AI Builder prompts are author-built, not OOB."]}, {"q": "Which statement best captures 'responsible AI' in the architect's daily job?", "options": ["A separate compliance team handles it after the build", "It's an annual checkbox audit", "Fairness, transparency, accountability, and safety are designed into every agent and reviewed continuously", "It only applies to healthcare scenarios"], "correct": 2, "explanations": ["Responsible AI is the architect's design responsibility, not a hand-off.", "It's continuous, not annual.", "Correct \u2014 RAI principles are baked into design, not bolted on.", "It applies to every regulated and unregulated AI workload."]}]};
+const MODULE_NUM = 1;
+const totalQ = QUIZ_DATA.questions.length;
+const STORE_KEY = "ab100-progress-mod-" + MODULE_NUM;
+
+let answered = 0;
+let correct = 0;
+let userAnswers = {}; // qIndex -> chosenIndex
+
+function saveProgress() {
+  try {
+    const p = { answered, correct, totalQ, userAnswers, savedAt: Date.now() };
+    localStorage.setItem(STORE_KEY, JSON.stringify(p));
+    // also a global completion record
+    const all = JSON.parse(localStorage.getItem("ab100-progress-all") || "{}");
+    all["m" + MODULE_NUM] = { score: correct, total: totalQ, answered, complete: answered === totalQ, at: Date.now() };
+    localStorage.setItem("ab100-progress-all", JSON.stringify(all));
+  } catch(e) {}
+}
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    if (!p || !p.userAnswers) return;
+    userAnswers = p.userAnswers || {};
+    Object.keys(userAnswers).forEach(k => {
+      const qi = parseInt(k);
+      const oi = userAnswers[k];
+      applyAnswerVisuals(qi, oi);
+    });
+  } catch(e) {}
+}
+
+function applyAnswerVisuals(qi, oi) {
+  const q = QUIZ_DATA.questions[qi];
+  const block = document.getElementById('q-' + qi);
+  if (!block || block.dataset.locked === '1') return;
+  block.dataset.locked = '1';
+  const opts = block.querySelectorAll('.option');
+  opts.forEach((el, i) => {
+    el.classList.add('locked');
+    if (i === q.correct) el.classList.add('correct');
+    else if (i === oi) el.classList.add('wrong');
+    else el.classList.add('disabled');
+  });
+  const expl = block.querySelector('.explain');
+  expl.style.display = 'block';
+  const isRight = oi === q.correct;
+  expl.classList.remove('right', 'wrong');
+  expl.classList.add(isRight ? 'right' : 'wrong');
+  let out = '';
+  out += '<div><span class="verdict">' + (isRight ? 'Correct' : 'Not quite') + '</span>' + q.explanations[q.correct] + '</div>';
+  if (!isRight) {
+    out += '<div style="margin-top:10px;"><strong>Why your pick is wrong:</strong> ' + q.explanations[oi] + '</div>';
+  }
+  out += '<details><summary>See reasoning for every option</summary><ul>';
+  for (let i = 0; i < q.options.length; i++) {
+    const tag = (i === q.correct) ? ' (correct)' : '';
+    out += '<li><strong>' + String.fromCharCode(65+i) + ')' + tag + '</strong> ' + q.explanations[i] + '</li>';
+  }
+  out += '</ul></details>';
+  expl.innerHTML = out;
+  if (typeof userAnswers[qi] === 'undefined') {
+    answered += 1;
+    if (isRight) correct += 1;
+  }
+  renderScorebar();
+}
+
+function pickOption(qi, oi) {
+  const block = document.getElementById('q-' + qi);
+  if (block.dataset.locked === '1') return;
+  applyAnswerVisuals(qi, oi);
+  userAnswers[qi] = oi;
+  saveProgress();
+}
+
+function resetAll() {
+  if (!confirm("Reset this quiz? All your answers will be cleared.")) return;
+  for (let i = 0; i < totalQ; i++) {
+    const block = document.getElementById('q-' + i);
+    if (block.dataset.locked === '1') {
+      block.dataset.locked = '0';
+      block.querySelectorAll('.option').forEach(el => { el.className = 'option'; });
+      const expl = block.querySelector('.explain');
+      expl.style.display = 'none';
+      expl.classList.remove('right', 'wrong');
+      expl.innerHTML = '';
+    }
+  }
+  answered = 0; correct = 0;
+  userAnswers = {};
+  saveProgress();
+  document.getElementById('success-banner').classList.remove('show');
+  renderScorebar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderScorebar() {
+  document.getElementById('progress-text').innerHTML = '<strong>' + answered + '</strong> of ' + totalQ + ' answered';
+  document.getElementById('score-text').textContent = 'Score: ' + correct + '/' + totalQ;
+  const pct = totalQ ? Math.round((correct/totalQ)*100) : 0;
+  document.getElementById('pct-text').textContent = pct + '%';
+  if (answered === totalQ) {
+    const banner = document.getElementById('success-banner');
+    banner.classList.add('show');
+    let msg = '';
+    if (correct === totalQ) msg = 'Perfect run. You know this module cold.';
+    else if (correct >= totalQ * 0.75) msg = 'Strong pass. Skim the explanations and you are ready.';
+    else if (correct >= totalQ * 0.5) msg = 'Halfway home. Re-read the recap and try again.';
+    else msg = 'Slow down — go back to the recap and key concepts before retrying.';
+    document.getElementById('banner-text').textContent =
+      'You scored ' + correct + '/' + totalQ + ' (' + pct + '%). ' + msg;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadProgress();
+  renderScorebar();
+});
+</script>
+</body>
+</html>

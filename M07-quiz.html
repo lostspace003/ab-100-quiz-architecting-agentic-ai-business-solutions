@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AB-100 — Module 7 — Orchestrate configuration for prebuilt agents and apps</title>
+<style>
+:root {
+  --ink: #0b1530;
+  --ink-soft: #2a3450;
+  --muted: #5b6478;
+  --line: #e6ebf4;
+  --bg: #f5f7fb;
+  --bg-card: #ffffff;
+  --brand: #1f3a68;
+  --brand-soft: #2c4f8c;
+  --accent: #0078d4;
+  --good: #1f7e3a;
+  --good-soft: #e7f5ec;
+  --bad: #b03030;
+  --bad-soft: #fbeaea;
+  --warn: #b06000;
+  --warn-soft: #fff5e0;
+  --shadow: 0 6px 24px rgba(15, 29, 58, 0.08);
+  --shadow-strong: 0 12px 36px rgba(15, 29, 58, 0.14);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0; padding: 0; background: var(--bg); color: var(--ink); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 980px; margin: 0 auto; padding: 24px 22px 80px; }
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0 16px; border-bottom: 1px solid var(--line); margin-bottom: 22px;
+}
+.topbar a { color: var(--brand); font-weight: 600; text-decoration: none; font-size: 14px; }
+.topbar a:hover { text-decoration: underline; }
+.brand-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; background: var(--brand); color: white;
+  font-size: 11px; font-weight: 700; letter-spacing: .6px; border-radius: 999px; text-transform: uppercase;
+}
+.brand-pill::before {
+  content: ""; width: 8px; height: 8px; border-radius: 999px; background: #6ec1ff;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-soft) 60%, #3b6cae 100%);
+  color: white; border-radius: 20px; padding: 32px 32px; box-shadow: var(--shadow-strong);
+  margin-bottom: 24px; position: relative; overflow: hidden;
+}
+.hero::after {
+  content: ""; position: absolute; right: -80px; top: -80px; width: 280px; height: 280px;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%);
+}
+.hero-mod {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.18); padding: 5px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}
+.hero h1 { margin: 12px 0 6px; font-size: 30px; line-height: 1.2; font-weight: 700; }
+.hero .frame { font-size: 15px; opacity: 0.92; max-width: 680px; }
+
+/* Stickybar */
+.scorebar {
+  position: sticky; top: 12px; z-index: 20;
+  background: white; border-radius: 14px; box-shadow: var(--shadow);
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px; margin-bottom: 22px; gap: 12px; flex-wrap: wrap;
+}
+.scorebar .progress { color: var(--muted); }
+.scorebar .progress strong { color: var(--ink); }
+.scorebar .score { font-weight: 700; color: var(--brand); }
+.scorebar .pct { font-weight: 700; color: var(--accent); }
+
+/* Cards */
+section.card {
+  background: var(--bg-card); border-radius: 18px; box-shadow: var(--shadow);
+  padding: 26px 28px; margin-bottom: 22px;
+}
+section.card h2 {
+  font-size: 19px; color: var(--brand); margin: 0 0 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+section.card h2 .icon {
+  width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #e3ecf9, #d0deef);
+  display: inline-flex; align-items: center; justify-content: center; color: var(--brand);
+  font-size: 15px; font-weight: 800;
+}
+
+/* Recap */
+.recap-list { padding-left: 20px; margin: 0; }
+.recap-list li { margin: 8px 0; }
+.recap-list li::marker { color: var(--accent); font-weight: 700; }
+
+/* Key concepts grid */
+.concepts {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.concept {
+  border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+  background: linear-gradient(180deg, #fbfcff 0%, #f3f6fc 100%);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.concept:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.concept .term { font-weight: 700; color: var(--brand); margin-bottom: 4px; font-size: 14px; }
+.concept .def  { color: var(--ink-soft); font-size: 13.5px; }
+
+/* Cheat sheet */
+.cheat {
+  display: grid; gap: 10px;
+}
+.cheat-row {
+  display: grid; grid-template-columns: 1fr; gap: 8px; align-items: start;
+  background: linear-gradient(180deg, #fffaf0 0%, #fff5e0 100%);
+  border-left: 4px solid #c8a040; border-radius: 12px; padding: 12px 14px;
+  font-size: 14px; color: var(--ink-soft);
+}
+.cheat-row strong { color: var(--ink); }
+
+/* Quiz */
+.q-meta { color: var(--muted); font-size: 13.5px; margin: 0 0 16px; }
+.q { padding: 4px 0 6px; }
+.q + .q { border-top: 1px dashed var(--line); margin-top: 18px; padding-top: 16px; }
+.q-stem { font-weight: 600; color: var(--ink); margin: 0 0 12px; line-height: 1.5; }
+.q-num {
+  display: inline-block; background: #eef3fb; color: var(--brand); padding: 3px 10px;
+  border-radius: 999px; font-size: 12px; font-weight: 700; margin-right: 8px; vertical-align: 2px;
+}
+.options { display: flex; flex-direction: column; gap: 8px; }
+.option {
+  display: flex; align-items: flex-start; gap: 10px;
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px;
+  cursor: pointer; background: #fafbff; transition: all .15s ease;
+  font-size: 14.5px; line-height: 1.5;
+}
+.option:hover:not(.locked) {
+  border-color: var(--brand); background: #f1f5fc; transform: translateY(-1px);
+}
+.option .letter {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 6px; background: white; border: 1px solid var(--line);
+  font-weight: 700; font-size: 12px; color: var(--brand); flex-shrink: 0;
+}
+.option.locked { cursor: default; }
+.option.correct {
+  border-color: var(--good); background: var(--good-soft); color: #0c4a1c;
+}
+.option.correct .letter { background: var(--good); color: white; border-color: var(--good); }
+.option.wrong {
+  border-color: var(--bad); background: var(--bad-soft); color: #6c1414;
+}
+.option.wrong .letter { background: var(--bad); color: white; border-color: var(--bad); }
+.option.disabled { opacity: 0.55; }
+
+.explain {
+  margin-top: 12px; padding: 14px 16px; border-radius: 12px;
+  background: #f3f6fc; font-size: 14px;
+  border-left: 4px solid var(--brand);
+}
+.explain.right { background: var(--good-soft); border-left-color: var(--good); }
+.explain.wrong { background: var(--bad-soft); border-left-color: var(--bad); }
+.explain .verdict {
+  font-weight: 800; margin-right: 6px; text-transform: uppercase;
+  font-size: 12px; letter-spacing: .5px;
+}
+.explain.right .verdict { color: var(--good); }
+.explain.wrong .verdict { color: var(--bad); }
+.explain details { margin-top: 10px; }
+.explain summary {
+  cursor: pointer; font-size: 13px; color: var(--brand); font-weight: 600;
+  padding: 4px 0; outline: none;
+}
+.explain summary:hover { text-decoration: underline; }
+.explain ul { padding-left: 20px; margin: 6px 0 0; }
+.explain li { margin: 4px 0; font-size: 13px; line-height: 1.5; }
+.explain li strong { color: var(--ink); }
+
+
+/* Buttons */
+.btn {
+  padding: 9px 16px; border-radius: 10px; border: 1.5px solid var(--brand);
+  background: var(--brand); color: white; font-weight: 600; cursor: pointer;
+  font-size: 13.5px; transition: all .14s ease;
+}
+.btn:hover { background: #163056; transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn.ghost {
+  background: white; color: var(--brand);
+}
+.btn.ghost:hover { background: #eef3fb; }
+.btn.danger { border-color: var(--bad); background: var(--bad); }
+.btn.danger:hover { background: #821e1e; }
+
+/* Banners */
+.success-banner {
+  background: linear-gradient(135deg, #1f7e3a 0%, #14572a 100%); color: white;
+  border-radius: 16px; padding: 22px 26px; margin-bottom: 22px; display: none;
+  box-shadow: var(--shadow-strong);
+}
+.success-banner.show { display: block; }
+.success-banner h3 { margin: 0 0 6px; font-size: 22px; }
+.success-banner p { margin: 4px 0 0; opacity: 0.95; font-size: 14px; }
+
+/* Further reading */
+.refs a {
+  display: block; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px;
+  margin: 8px 0; color: var(--brand); text-decoration: none; font-weight: 600; font-size: 14px;
+  background: linear-gradient(180deg, #fbfcff, #f4f7fc);
+  transition: all .14s ease;
+}
+.refs a:hover { border-color: var(--brand); transform: translateX(3px); box-shadow: var(--shadow); }
+.refs a::after { content: "  →"; color: var(--accent); }
+.refs a small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; margin-top: 2px; word-break: break-all; }
+
+/* Footer */
+footer.foot {
+  color: var(--muted); font-size: 12px; text-align: center; margin-top: 32px;
+  padding-top: 18px; border-top: 1px solid var(--line);
+}
+
+@media print {
+  body { background: white; }
+  .scorebar, .btn, .success-banner { display: none !important; }
+  section.card { box-shadow: none; border: 1px solid var(--line); page-break-inside: avoid; }
+  .hero { background: var(--brand); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .explain { display: block !important; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .hero h1 { font-size: 24px; }
+  .hero { padding: 24px 22px; }
+  .scorebar { font-size: 13px; padding: 12px 14px; }
+  section.card { padding: 22px 20px; }
+}
+
+/* Index page extras */
+.intro {
+  background: var(--bg-card); padding: 28px 32px; border-radius: 20px;
+  box-shadow: var(--shadow); margin-bottom: 22px;
+}
+.intro h1 { margin: 0 0 8px; font-size: 28px; color: var(--ink); }
+.intro p { margin: 0 0 6px; color: var(--ink-soft); }
+.modules-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.mod-card {
+  display: block; text-decoration: none; color: inherit;
+  background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow);
+  padding: 22px 24px; transition: transform .14s ease, box-shadow .14s ease;
+  border: 1px solid var(--line);
+  position: relative; overflow: hidden;
+}
+.mod-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-strong); }
+.mod-card .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--brand); color: white; border-radius: 8px;
+  font-size: 13px; font-weight: 800;
+}
+.mod-card h3 { font-size: 17px; font-weight: 700; margin: 12px 0 6px; color: var(--ink); }
+.mod-card .summary { color: var(--muted); font-style: italic; font-size: 13.5px; line-height: 1.5; }
+.mod-card .stat-row {
+  display: flex; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line);
+  font-size: 12px; color: var(--muted);
+}
+.mod-card .stat-row .stat { display: inline-flex; align-items: center; gap: 4px; }
+.completion {
+  display: none; position: absolute; top: 14px; right: 14px;
+  background: var(--good); color: white; padding: 4px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+}
+.mod-card.done .completion { display: inline-block; }
+.mod-card.done { border-color: var(--good); }
+.tot-progress {
+  background: white; border-radius: 14px; box-shadow: var(--shadow); padding: 14px 18px; margin-bottom: 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  font-size: 14px;
+}
+.tot-progress .bar-wrap { flex: 1; background: var(--line); border-radius: 999px; overflow: hidden; height: 10px; }
+.tot-progress .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent) 0%, var(--good) 100%); transition: width .4s ease; }
+.tot-progress .label { color: var(--muted); white-space: nowrap; }
+.tot-progress .label strong { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a href="index.html">← All modules</a>
+    <span class="brand-pill">AB-100 · Student Portal</span>
+  </div>
+
+  <div class="hero">
+    <span class="hero-mod">Module 7 of 11</span>
+    <h1>Orchestrate configuration for prebuilt agents and apps</h1>
+    <p class="frame">Configure what already exists in Dynamics 365, M365 Copilot, and Power Platform before you build anything custom.</p>
+  </div>
+
+  <div class="scorebar">
+    <span class="progress" id="progress-text"><strong>0</strong> of 8 answered</span>
+    <span class="score" id="score-text">Score: 0/8</span>
+    <span class="pct" id="pct-text">0%</span>
+    <button class="btn danger" onclick="resetAll()">Reset</button>
+  </div>
+
+  <div id="success-banner" class="success-banner">
+    <h3>Quiz complete</h3>
+    <p id="banner-text"></p>
+  </div>
+
+  <section class="card">
+    <h2><span class="icon">R</span>Recap — what to remember</h2>
+    <ul class="recap-list"><li>Dynamics 365 ships Copilots for finance, supply chain, customer experience, and service.</li>
+<li>M365 Copilot for Sales and for Service are configurable, not custom-built.</li>
+<li>Power Platform AI Hub centralizes AI assets across the tenant.</li>
+<li>Finance and Operations agent chats can be extended with additional knowledge sources.</li>
+<li>Add knowledge sources to in-app help and guidance for D365 Finance / Supply Chain Management.</li></ul>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">K</span>Key concepts</h2>
+    <div class="concepts"><div class="concept"><div class="term">Copilot in Dynamics 365 Finance / Supply Chain</div><div class="def">Prebuilt Copilots for F&amp;O agent chats — extensible with knowledge sources for in-app help.</div></div><div class="concept"><div class="term">Copilot in Dynamics 365 Customer Experience / Service</div><div class="def">Prebuilt agent and seller experiences across CRM scenarios — configurable with business terms and connectors.</div></div><div class="concept"><div class="term">M365 Copilot for Sales</div><div class="def">Configurable Copilot for sellers tightly integrated with Dynamics 365 Sales / Salesforce.</div></div><div class="concept"><div class="term">M365 Copilot for Service</div><div class="def">Configurable Copilot for service agents integrated with Dynamics 365 Customer Service / ServiceNow.</div></div><div class="concept"><div class="term">Power Platform AI Hub</div><div class="def">Central inventory and governance for AI prompts, models, and capabilities across Power Platform.</div></div><div class="concept"><div class="term">Knowledge sources for in-app help</div><div class="def">Customer-specific docs and policies plugged into D365 SCM / Finance help-and-guidance.</div></div></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">C</span>Cheat sheet — when…then</h2>
+    <div class="cheat"><div class="cheat-row"><div><strong>When a customer has D365</strong> → activate the prebuilt Copilots before considering custom.</div></div><div class="cheat-row"><div><strong>When sellers use a non-MS CRM</strong> → M365 Copilot for Sales still works (Salesforce supported).</div></div><div class="cheat-row"><div><strong>When users want better in-app help</strong> → add knowledge sources to D365 SCM / Finance help.</div></div><div class="cheat-row"><div><strong>When AI sprawl appears in Power Platform</strong> → centralize via AI Hub.</div></div><div class="cheat-row"><div><strong>When Copilots span multiple D365 apps</strong> → design hand-offs across the end-to-end process.</div></div></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">Q</span>Practice quiz · 8 questions</h2>
+    <p class="q-meta">Tap an option to lock your answer. You'll see the right answer, why your pick is wrong (if it is), and reasoning for every option. Use <em>Reset</em> at the top to start the quiz over. Your progress saves automatically.</p>
+    
+<div class="q" id="q-0" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q1</span>Which is the FIRST move when a customer asks for AI in Dynamics 365 Finance?</p>
+  <div class="options"><div class="option" onclick="pickOption(0,0)"><span class="letter">A</span><span>Build a custom agent</span></div>
+<div class="option" onclick="pickOption(0,1)"><span class="letter">B</span><span>Activate and configure the Copilot capabilities Microsoft already ships in D365 Finance, then evaluate gaps</span></div>
+<div class="option" onclick="pickOption(0,2)"><span class="letter">C</span><span>Start a multi-year custom-model project</span></div>
+<div class="option" onclick="pickOption(0,3)"><span class="letter">D</span><span>Replace D365 Finance</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-1" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q2</span>Microsoft 365 Copilot for Sales is BEST described as:</p>
+  <div class="options"><div class="option" onclick="pickOption(1,0)"><span class="letter">A</span><span>A wholly custom AI app</span></div>
+<div class="option" onclick="pickOption(1,1)"><span class="letter">B</span><span>A configurable, prebuilt Copilot tightly integrated with Dynamics 365 Sales / Salesforce data</span></div>
+<div class="option" onclick="pickOption(1,2)"><span class="letter">C</span><span>A standalone CRM</span></div>
+<div class="option" onclick="pickOption(1,3)"><span class="letter">D</span><span>A pure Outlook plugin</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-2" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q3</span>An architect needs to add a knowledge source to in-app help in Dynamics 365 Supply Chain Management. Which approach is correct?</p>
+  <div class="options"><div class="option" onclick="pickOption(2,0)"><span class="letter">A</span><span>Hard-code answers in the UI</span></div>
+<div class="option" onclick="pickOption(2,1)"><span class="letter">B</span><span>Use the supported knowledge-source configuration to plug curated documents into the in-app help and guidance experience</span></div>
+<div class="option" onclick="pickOption(2,2)"><span class="letter">C</span><span>Email a PDF to every user</span></div>
+<div class="option" onclick="pickOption(2,3)"><span class="letter">D</span><span>Build a separate website</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-3" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q4</span>What is the role of Power Platform AI Hub in the orchestration story?</p>
+  <div class="options"><div class="option" onclick="pickOption(3,0)"><span class="letter">A</span><span>A central inventory and governance plane for AI capabilities used across Power Platform</span></div>
+<div class="option" onclick="pickOption(3,1)"><span class="letter">B</span><span>A Microsoft 365 Copilot replacement</span></div>
+<div class="option" onclick="pickOption(3,2)"><span class="letter">C</span><span>A new Office app</span></div>
+<div class="option" onclick="pickOption(3,3)"><span class="letter">D</span><span>An AI training service</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-4" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q5</span>Standard Bank uses Copilot in Dynamics 365 Sales to brief relationship managers. The architect&#x27;s main work in a project like this is:</p>
+  <div class="options"><div class="option" onclick="pickOption(4,0)"><span class="letter">A</span><span>Building a new model</span></div>
+<div class="option" onclick="pickOption(4,1)"><span class="letter">B</span><span>Configuration: business terms, security roles, data integration with grounding sources, KPIs</span></div>
+<div class="option" onclick="pickOption(4,2)"><span class="letter">C</span><span>Creating a new chat app</span></div>
+<div class="option" onclick="pickOption(4,3)"><span class="letter">D</span><span>Replacing CRM</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-5" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q6</span>Which is the BEST way to coordinate Copilot capabilities across multiple Dynamics 365 apps a customer owns?</p>
+  <div class="options"><div class="option" onclick="pickOption(5,0)"><span class="letter">A</span><span>Treat each app&#x27;s Copilot as siloed</span></div>
+<div class="option" onclick="pickOption(5,1)"><span class="letter">B</span><span>Map the end-to-end business processes across apps and plan how the Copilots / agents hand off, share data, and share grounding</span></div>
+<div class="option" onclick="pickOption(5,2)"><span class="letter">C</span><span>Disable all Copilots in all but one</span></div>
+<div class="option" onclick="pickOption(5,3)"><span class="letter">D</span><span>Outsource</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-6" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q7</span>Why is it important to add additional knowledge sources to the F&amp;O agent chat?</p>
+  <div class="options"><div class="option" onclick="pickOption(6,0)"><span class="letter">A</span><span>To replace the user manual</span></div>
+<div class="option" onclick="pickOption(6,1)"><span class="letter">B</span><span>To ground answers in the customer&#x27;s policies, SOPs, and process docs so guidance is correct for THEIR org, not generic</span></div>
+<div class="option" onclick="pickOption(6,2)"><span class="letter">C</span><span>To increase load</span></div>
+<div class="option" onclick="pickOption(6,3)"><span class="letter">D</span><span>Because Microsoft requires it</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-7" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q8</span>When should an architect NOT propose a prebuilt Microsoft 365 agent?</p>
+  <div class="options"><div class="option" onclick="pickOption(7,0)"><span class="letter">A</span><span>When a prebuilt option exists and matches the use case</span></div>
+<div class="option" onclick="pickOption(7,1)"><span class="letter">B</span><span>When the use case is significantly outside the agent&#x27;s intended scope or requires non-Microsoft surfaces</span></div>
+<div class="option" onclick="pickOption(7,2)"><span class="letter">C</span><span>Always</span></div>
+<div class="option" onclick="pickOption(7,3)"><span class="letter">D</span><span>Never</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+  </section>
+
+  <section class="card refs">
+    <h2><span class="icon">→</span>Further reading on Microsoft Learn</h2>
+    <a href="https://learn.microsoft.com/en-us/microsoft-sales-copilot/" target="_blank" rel="noopener">M365 Copilot for Sales<small>https://learn.microsoft.com/en-us/microsoft-sales-copilot/</small></a><a href="https://learn.microsoft.com/en-us/dynamics365/customer-service/use-copilot-features" target="_blank" rel="noopener">Copilot in D365 Customer Service<small>https://learn.microsoft.com/en-us/dynamics365/customer-service/use-copilot-features</small></a><a href="https://learn.microsoft.com/en-us/dynamics365/finance/" target="_blank" rel="noopener">Dynamics 365 Finance docs<small>https://learn.microsoft.com/en-us/dynamics365/finance/</small></a><a href="https://learn.microsoft.com/en-us/ai-builder/overview" target="_blank" rel="noopener">Power Platform AI Builder (Hub)<small>https://learn.microsoft.com/en-us/ai-builder/overview</small></a>
+  </section>
+
+  <footer class="foot">
+    AB-100 — Architecting agentic AI business solutions · Microsoft customer stories used as use cases.<br>
+    Self-paced — open this page as many times as you want. Progress is saved in your browser.
+  </footer>
+</div>
+<script>
+const QUIZ_DATA = {"questions": [{"q": "Which is the FIRST move when a customer asks for AI in Dynamics 365 Finance?", "options": ["Build a custom agent", "Activate and configure the Copilot capabilities Microsoft already ships in D365 Finance, then evaluate gaps", "Start a multi-year custom-model project", "Replace D365 Finance"], "correct": 1, "explanations": ["Custom-first wastes the platform investment.", "Correct \u2014 orchestrate the prebuilt Copilots first; gap-fill with extensibility second.", "Premature.", "Reckless."]}, {"q": "Microsoft 365 Copilot for Sales is BEST described as:", "options": ["A wholly custom AI app", "A configurable, prebuilt Copilot tightly integrated with Dynamics 365 Sales / Salesforce data", "A standalone CRM", "A pure Outlook plugin"], "correct": 1, "explanations": ["It's configured, not custom-built.", "Correct \u2014 it's configured for sellers, integrated with the CRM of choice.", "Not a CRM.", "More than just Outlook."]}, {"q": "An architect needs to add a knowledge source to in-app help in Dynamics 365 Supply Chain Management. Which approach is correct?", "options": ["Hard-code answers in the UI", "Use the supported knowledge-source configuration to plug curated documents into the in-app help and guidance experience", "Email a PDF to every user", "Build a separate website"], "correct": 1, "explanations": ["Hard-coding doesn't scale.", "Correct \u2014 D365 SCM supports configured knowledge sources for help and guidance; that's the orchestration path.", "Not a system.", "Defeats the in-app benefit."]}, {"q": "What is the role of Power Platform AI Hub in the orchestration story?", "options": ["A central inventory and governance plane for AI capabilities used across Power Platform", "A Microsoft 365 Copilot replacement", "A new Office app", "An AI training service"], "correct": 0, "explanations": ["Correct \u2014 AI Hub centralizes AI prompts, models, and governance across Power Platform.", "Not a Copilot replacement.", "Not an app.", "Not a training service."]}, {"q": "Standard Bank uses Copilot in Dynamics 365 Sales to brief relationship managers. The architect's main work in a project like this is:", "options": ["Building a new model", "Configuration: business terms, security roles, data integration with grounding sources, KPIs", "Creating a new chat app", "Replacing CRM"], "correct": 1, "explanations": ["Models are managed by Microsoft.", "Correct \u2014 orchestration = configuration + integration + governance.", "Not necessary; the Copilot already exists.", "Reckless."]}, {"q": "Which is the BEST way to coordinate Copilot capabilities across multiple Dynamics 365 apps a customer owns?", "options": ["Treat each app's Copilot as siloed", "Map the end-to-end business processes across apps and plan how the Copilots / agents hand off, share data, and share grounding", "Disable all Copilots in all but one", "Outsource"], "correct": 1, "explanations": ["Silos are the anti-pattern.", "Correct \u2014 orchestration across apps is the architect's value-add; map the process, plan the hand-offs.", "Throws away value.", "Not architecture."]}, {"q": "Why is it important to add additional knowledge sources to the F&O agent chat?", "options": ["To replace the user manual", "To ground answers in the customer's policies, SOPs, and process docs so guidance is correct for THEIR org, not generic", "To increase load", "Because Microsoft requires it"], "correct": 1, "explanations": ["Knowledge sources augment, they don't replace docs.", "Correct \u2014 grounding on customer-specific knowledge is the whole point.", "Load isn't the goal.", "Microsoft enables it; doesn't require it."]}, {"q": "When should an architect NOT propose a prebuilt Microsoft 365 agent?", "options": ["When a prebuilt option exists and matches the use case", "When the use case is significantly outside the agent's intended scope or requires non-Microsoft surfaces", "Always", "Never"], "correct": 1, "explanations": ["If a prebuilt fits, use it.", "Correct \u2014 out-of-scope or non-Microsoft surfaces are the legitimate reasons to skip prebuilt.", "False.", "False."]}]};
+const MODULE_NUM = 7;
+const totalQ = QUIZ_DATA.questions.length;
+const STORE_KEY = "ab100-progress-mod-" + MODULE_NUM;
+
+let answered = 0;
+let correct = 0;
+let userAnswers = {}; // qIndex -> chosenIndex
+
+function saveProgress() {
+  try {
+    const p = { answered, correct, totalQ, userAnswers, savedAt: Date.now() };
+    localStorage.setItem(STORE_KEY, JSON.stringify(p));
+    // also a global completion record
+    const all = JSON.parse(localStorage.getItem("ab100-progress-all") || "{}");
+    all["m" + MODULE_NUM] = { score: correct, total: totalQ, answered, complete: answered === totalQ, at: Date.now() };
+    localStorage.setItem("ab100-progress-all", JSON.stringify(all));
+  } catch(e) {}
+}
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    if (!p || !p.userAnswers) return;
+    userAnswers = p.userAnswers || {};
+    Object.keys(userAnswers).forEach(k => {
+      const qi = parseInt(k);
+      const oi = userAnswers[k];
+      applyAnswerVisuals(qi, oi);
+    });
+  } catch(e) {}
+}
+
+function applyAnswerVisuals(qi, oi) {
+  const q = QUIZ_DATA.questions[qi];
+  const block = document.getElementById('q-' + qi);
+  if (!block || block.dataset.locked === '1') return;
+  block.dataset.locked = '1';
+  const opts = block.querySelectorAll('.option');
+  opts.forEach((el, i) => {
+    el.classList.add('locked');
+    if (i === q.correct) el.classList.add('correct');
+    else if (i === oi) el.classList.add('wrong');
+    else el.classList.add('disabled');
+  });
+  const expl = block.querySelector('.explain');
+  expl.style.display = 'block';
+  const isRight = oi === q.correct;
+  expl.classList.remove('right', 'wrong');
+  expl.classList.add(isRight ? 'right' : 'wrong');
+  let out = '';
+  out += '<div><span class="verdict">' + (isRight ? 'Correct' : 'Not quite') + '</span>' + q.explanations[q.correct] + '</div>';
+  if (!isRight) {
+    out += '<div style="margin-top:10px;"><strong>Why your pick is wrong:</strong> ' + q.explanations[oi] + '</div>';
+  }
+  out += '<details><summary>See reasoning for every option</summary><ul>';
+  for (let i = 0; i < q.options.length; i++) {
+    const tag = (i === q.correct) ? ' (correct)' : '';
+    out += '<li><strong>' + String.fromCharCode(65+i) + ')' + tag + '</strong> ' + q.explanations[i] + '</li>';
+  }
+  out += '</ul></details>';
+  expl.innerHTML = out;
+  if (typeof userAnswers[qi] === 'undefined') {
+    answered += 1;
+    if (isRight) correct += 1;
+  }
+  renderScorebar();
+}
+
+function pickOption(qi, oi) {
+  const block = document.getElementById('q-' + qi);
+  if (block.dataset.locked === '1') return;
+  applyAnswerVisuals(qi, oi);
+  userAnswers[qi] = oi;
+  saveProgress();
+}
+
+function resetAll() {
+  if (!confirm("Reset this quiz? All your answers will be cleared.")) return;
+  for (let i = 0; i < totalQ; i++) {
+    const block = document.getElementById('q-' + i);
+    if (block.dataset.locked === '1') {
+      block.dataset.locked = '0';
+      block.querySelectorAll('.option').forEach(el => { el.className = 'option'; });
+      const expl = block.querySelector('.explain');
+      expl.style.display = 'none';
+      expl.classList.remove('right', 'wrong');
+      expl.innerHTML = '';
+    }
+  }
+  answered = 0; correct = 0;
+  userAnswers = {};
+  saveProgress();
+  document.getElementById('success-banner').classList.remove('show');
+  renderScorebar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderScorebar() {
+  document.getElementById('progress-text').innerHTML = '<strong>' + answered + '</strong> of ' + totalQ + ' answered';
+  document.getElementById('score-text').textContent = 'Score: ' + correct + '/' + totalQ;
+  const pct = totalQ ? Math.round((correct/totalQ)*100) : 0;
+  document.getElementById('pct-text').textContent = pct + '%';
+  if (answered === totalQ) {
+    const banner = document.getElementById('success-banner');
+    banner.classList.add('show');
+    let msg = '';
+    if (correct === totalQ) msg = 'Perfect run. You know this module cold.';
+    else if (correct >= totalQ * 0.75) msg = 'Strong pass. Skim the explanations and you are ready.';
+    else if (correct >= totalQ * 0.5) msg = 'Halfway home. Re-read the recap and try again.';
+    else msg = 'Slow down — go back to the recap and key concepts before retrying.';
+    document.getElementById('banner-text').textContent =
+      'You scored ' + correct + '/' + totalQ + ' (' + pct + '%). ' + msg;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadProgress();
+  renderScorebar();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AB-100 — Module 6 — Design extensibility of AI solutions</title>
+<style>
+:root {
+  --ink: #0b1530;
+  --ink-soft: #2a3450;
+  --muted: #5b6478;
+  --line: #e6ebf4;
+  --bg: #f5f7fb;
+  --bg-card: #ffffff;
+  --brand: #1f3a68;
+  --brand-soft: #2c4f8c;
+  --accent: #0078d4;
+  --good: #1f7e3a;
+  --good-soft: #e7f5ec;
+  --bad: #b03030;
+  --bad-soft: #fbeaea;
+  --warn: #b06000;
+  --warn-soft: #fff5e0;
+  --shadow: 0 6px 24px rgba(15, 29, 58, 0.08);
+  --shadow-strong: 0 12px 36px rgba(15, 29, 58, 0.14);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0; padding: 0; background: var(--bg); color: var(--ink); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 980px; margin: 0 auto; padding: 24px 22px 80px; }
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0 16px; border-bottom: 1px solid var(--line); margin-bottom: 22px;
+}
+.topbar a { color: var(--brand); font-weight: 600; text-decoration: none; font-size: 14px; }
+.topbar a:hover { text-decoration: underline; }
+.brand-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; background: var(--brand); color: white;
+  font-size: 11px; font-weight: 700; letter-spacing: .6px; border-radius: 999px; text-transform: uppercase;
+}
+.brand-pill::before {
+  content: ""; width: 8px; height: 8px; border-radius: 999px; background: #6ec1ff;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-soft) 60%, #3b6cae 100%);
+  color: white; border-radius: 20px; padding: 32px 32px; box-shadow: var(--shadow-strong);
+  margin-bottom: 24px; position: relative; overflow: hidden;
+}
+.hero::after {
+  content: ""; position: absolute; right: -80px; top: -80px; width: 280px; height: 280px;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 60%);
+}
+.hero-mod {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.18); padding: 5px 12px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  backdrop-filter: blur(4px);
+}
+.hero h1 { margin: 12px 0 6px; font-size: 30px; line-height: 1.2; font-weight: 700; }
+.hero .frame { font-size: 15px; opacity: 0.92; max-width: 680px; }
+
+/* Stickybar */
+.scorebar {
+  position: sticky; top: 12px; z-index: 20;
+  background: white; border-radius: 14px; box-shadow: var(--shadow);
+  padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+  font-size: 14px; margin-bottom: 22px; gap: 12px; flex-wrap: wrap;
+}
+.scorebar .progress { color: var(--muted); }
+.scorebar .progress strong { color: var(--ink); }
+.scorebar .score { font-weight: 700; color: var(--brand); }
+.scorebar .pct { font-weight: 700; color: var(--accent); }
+
+/* Cards */
+section.card {
+  background: var(--bg-card); border-radius: 18px; box-shadow: var(--shadow);
+  padding: 26px 28px; margin-bottom: 22px;
+}
+section.card h2 {
+  font-size: 19px; color: var(--brand); margin: 0 0 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+section.card h2 .icon {
+  width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, #e3ecf9, #d0deef);
+  display: inline-flex; align-items: center; justify-content: center; color: var(--brand);
+  font-size: 15px; font-weight: 800;
+}
+
+/* Recap */
+.recap-list { padding-left: 20px; margin: 0; }
+.recap-list li { margin: 8px 0; }
+.recap-list li::marker { color: var(--accent); font-weight: 700; }
+
+/* Key concepts grid */
+.concepts {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.concept {
+  border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+  background: linear-gradient(180deg, #fbfcff 0%, #f3f6fc 100%);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.concept:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.concept .term { font-weight: 700; color: var(--brand); margin-bottom: 4px; font-size: 14px; }
+.concept .def  { color: var(--ink-soft); font-size: 13.5px; }
+
+/* Cheat sheet */
+.cheat {
+  display: grid; gap: 10px;
+}
+.cheat-row {
+  display: grid; grid-template-columns: 1fr; gap: 8px; align-items: start;
+  background: linear-gradient(180deg, #fffaf0 0%, #fff5e0 100%);
+  border-left: 4px solid #c8a040; border-radius: 12px; padding: 12px 14px;
+  font-size: 14px; color: var(--ink-soft);
+}
+.cheat-row strong { color: var(--ink); }
+
+/* Quiz */
+.q-meta { color: var(--muted); font-size: 13.5px; margin: 0 0 16px; }
+.q { padding: 4px 0 6px; }
+.q + .q { border-top: 1px dashed var(--line); margin-top: 18px; padding-top: 16px; }
+.q-stem { font-weight: 600; color: var(--ink); margin: 0 0 12px; line-height: 1.5; }
+.q-num {
+  display: inline-block; background: #eef3fb; color: var(--brand); padding: 3px 10px;
+  border-radius: 999px; font-size: 12px; font-weight: 700; margin-right: 8px; vertical-align: 2px;
+}
+.options { display: flex; flex-direction: column; gap: 8px; }
+.option {
+  display: flex; align-items: flex-start; gap: 10px;
+  border: 1.5px solid var(--line); border-radius: 12px; padding: 12px 14px;
+  cursor: pointer; background: #fafbff; transition: all .15s ease;
+  font-size: 14.5px; line-height: 1.5;
+}
+.option:hover:not(.locked) {
+  border-color: var(--brand); background: #f1f5fc; transform: translateY(-1px);
+}
+.option .letter {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 6px; background: white; border: 1px solid var(--line);
+  font-weight: 700; font-size: 12px; color: var(--brand); flex-shrink: 0;
+}
+.option.locked { cursor: default; }
+.option.correct {
+  border-color: var(--good); background: var(--good-soft); color: #0c4a1c;
+}
+.option.correct .letter { background: var(--good); color: white; border-color: var(--good); }
+.option.wrong {
+  border-color: var(--bad); background: var(--bad-soft); color: #6c1414;
+}
+.option.wrong .letter { background: var(--bad); color: white; border-color: var(--bad); }
+.option.disabled { opacity: 0.55; }
+
+.explain {
+  margin-top: 12px; padding: 14px 16px; border-radius: 12px;
+  background: #f3f6fc; font-size: 14px;
+  border-left: 4px solid var(--brand);
+}
+.explain.right { background: var(--good-soft); border-left-color: var(--good); }
+.explain.wrong { background: var(--bad-soft); border-left-color: var(--bad); }
+.explain .verdict {
+  font-weight: 800; margin-right: 6px; text-transform: uppercase;
+  font-size: 12px; letter-spacing: .5px;
+}
+.explain.right .verdict { color: var(--good); }
+.explain.wrong .verdict { color: var(--bad); }
+.explain details { margin-top: 10px; }
+.explain summary {
+  cursor: pointer; font-size: 13px; color: var(--brand); font-weight: 600;
+  padding: 4px 0; outline: none;
+}
+.explain summary:hover { text-decoration: underline; }
+.explain ul { padding-left: 20px; margin: 6px 0 0; }
+.explain li { margin: 4px 0; font-size: 13px; line-height: 1.5; }
+.explain li strong { color: var(--ink); }
+
+
+/* Buttons */
+.btn {
+  padding: 9px 16px; border-radius: 10px; border: 1.5px solid var(--brand);
+  background: var(--brand); color: white; font-weight: 600; cursor: pointer;
+  font-size: 13.5px; transition: all .14s ease;
+}
+.btn:hover { background: #163056; transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn.ghost {
+  background: white; color: var(--brand);
+}
+.btn.ghost:hover { background: #eef3fb; }
+.btn.danger { border-color: var(--bad); background: var(--bad); }
+.btn.danger:hover { background: #821e1e; }
+
+/* Banners */
+.success-banner {
+  background: linear-gradient(135deg, #1f7e3a 0%, #14572a 100%); color: white;
+  border-radius: 16px; padding: 22px 26px; margin-bottom: 22px; display: none;
+  box-shadow: var(--shadow-strong);
+}
+.success-banner.show { display: block; }
+.success-banner h3 { margin: 0 0 6px; font-size: 22px; }
+.success-banner p { margin: 4px 0 0; opacity: 0.95; font-size: 14px; }
+
+/* Further reading */
+.refs a {
+  display: block; padding: 11px 14px; border: 1px solid var(--line); border-radius: 10px;
+  margin: 8px 0; color: var(--brand); text-decoration: none; font-weight: 600; font-size: 14px;
+  background: linear-gradient(180deg, #fbfcff, #f4f7fc);
+  transition: all .14s ease;
+}
+.refs a:hover { border-color: var(--brand); transform: translateX(3px); box-shadow: var(--shadow); }
+.refs a::after { content: "  →"; color: var(--accent); }
+.refs a small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; margin-top: 2px; word-break: break-all; }
+
+/* Footer */
+footer.foot {
+  color: var(--muted); font-size: 12px; text-align: center; margin-top: 32px;
+  padding-top: 18px; border-top: 1px solid var(--line);
+}
+
+@media print {
+  body { background: white; }
+  .scorebar, .btn, .success-banner { display: none !important; }
+  section.card { box-shadow: none; border: 1px solid var(--line); page-break-inside: avoid; }
+  .hero { background: var(--brand); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .explain { display: block !important; }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .hero h1 { font-size: 24px; }
+  .hero { padding: 24px 22px; }
+  .scorebar { font-size: 13px; padding: 12px 14px; }
+  section.card { padding: 22px 20px; }
+}
+
+/* Index page extras */
+.intro {
+  background: var(--bg-card); padding: 28px 32px; border-radius: 20px;
+  box-shadow: var(--shadow); margin-bottom: 22px;
+}
+.intro h1 { margin: 0 0 8px; font-size: 28px; color: var(--ink); }
+.intro p { margin: 0 0 6px; color: var(--ink-soft); }
+.modules-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+.mod-card {
+  display: block; text-decoration: none; color: inherit;
+  background: var(--bg-card); border-radius: 16px; box-shadow: var(--shadow);
+  padding: 22px 24px; transition: transform .14s ease, box-shadow .14s ease;
+  border: 1px solid var(--line);
+  position: relative; overflow: hidden;
+}
+.mod-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-strong); }
+.mod-card .num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; background: var(--brand); color: white; border-radius: 8px;
+  font-size: 13px; font-weight: 800;
+}
+.mod-card h3 { font-size: 17px; font-weight: 700; margin: 12px 0 6px; color: var(--ink); }
+.mod-card .summary { color: var(--muted); font-style: italic; font-size: 13.5px; line-height: 1.5; }
+.mod-card .stat-row {
+  display: flex; gap: 12px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line);
+  font-size: 12px; color: var(--muted);
+}
+.mod-card .stat-row .stat { display: inline-flex; align-items: center; gap: 4px; }
+.completion {
+  display: none; position: absolute; top: 14px; right: 14px;
+  background: var(--good); color: white; padding: 4px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: .5px;
+}
+.mod-card.done .completion { display: inline-block; }
+.mod-card.done { border-color: var(--good); }
+.tot-progress {
+  background: white; border-radius: 14px; box-shadow: var(--shadow); padding: 14px 18px; margin-bottom: 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  font-size: 14px;
+}
+.tot-progress .bar-wrap { flex: 1; background: var(--line); border-radius: 999px; overflow: hidden; height: 10px; }
+.tot-progress .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent) 0%, var(--good) 100%); transition: width .4s ease; }
+.tot-progress .label { color: var(--muted); white-space: nowrap; }
+.tot-progress .label strong { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a href="index.html">← All modules</a>
+    <span class="brand-pill">AB-100 · Student Portal</span>
+  </div>
+
+  <div class="hero">
+    <span class="hero-mod">Module 6 of 11</span>
+    <h1>Design extensibility of AI solutions</h1>
+    <p class="frame">Stretch the platform — when out-of-the-box isn&#x27;t enough.</p>
+  </div>
+
+  <div class="scorebar">
+    <span class="progress" id="progress-text"><strong>0</strong> of 8 answered</span>
+    <span class="score" id="score-text">Score: 0/8</span>
+    <span class="pct" id="pct-text">0%</span>
+    <button class="btn danger" onclick="resetAll()">Reset</button>
+  </div>
+
+  <div id="success-banner" class="success-banner">
+    <h3>Quiz complete</h3>
+    <p id="banner-text"></p>
+  </div>
+
+  <section class="card">
+    <h2><span class="icon">R</span>Recap — what to remember</h2>
+    <ul class="recap-list"><li>Foundry custom models, M365 Copilot agents, and Copilot Studio extensibility are the three big extension surfaces.</li>
+<li>MCP (Model Context Protocol) lets agents pull tools and data through a standard interface.</li>
+<li>Computer Use in Copilot Studio automates apps and websites that have no API.</li>
+<li>Reasoning + voice mode in Copilot Studio shape complex agent behavior.</li>
+<li>Microsoft 365 surfaces — Teams, SharePoint — are first-class deployment targets for agents.</li></ul>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">K</span>Key concepts</h2>
+    <div class="concepts"><div class="concept"><div class="term">Custom Foundry model</div><div class="def">Trained or tuned in Microsoft Foundry when proprietary data, latency, or IP isolation justify custom.</div></div><div class="concept"><div class="term">MCP (Model Context Protocol)</div><div class="def">Open standard letting agents discover and call external tools and data through a consistent interface.</div></div><div class="concept"><div class="term">A2A (Agent-to-Agent)</div><div class="def">Protocol for agents to delegate to each other across systems.</div></div><div class="concept"><div class="term">Computer Use</div><div class="def">Capability to drive a UI when no API exists — for legacy / third-party apps.</div></div><div class="concept"><div class="term">Reasoning + voice mode</div><div class="def">Copilot Studio behaviors that let the agent decompose goals dynamically and operate as voice.</div></div><div class="concept"><div class="term">M365 Copilot extensibility</div><div class="def">Surfacing custom agents and skills inside Word, Excel, Outlook, Teams, SharePoint.</div></div></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">C</span>Cheat sheet — when…then</h2>
+    <div class="cheat"><div class="cheat-row"><div><strong>When an API exists</strong> → use it; reserve Computer Use for legacy systems.</div></div><div class="cheat-row"><div><strong>When proprietary data + IP + latency align</strong> → build a custom model in Foundry.</div></div><div class="cheat-row"><div><strong>When agents need tools that change</strong> → wire them via MCP, not bespoke connectors.</div></div><div class="cheat-row"><div><strong>When users live in Teams</strong> → publish the agent into Teams, don&#x27;t build a separate site.</div></div><div class="cheat-row"><div><strong>When agents must coordinate</strong> → use A2A for delegation, MCP for shared tooling.</div></div></div>
+  </section>
+
+  <section class="card">
+    <h2><span class="icon">Q</span>Practice quiz · 8 questions</h2>
+    <p class="q-meta">Tap an option to lock your answer. You'll see the right answer, why your pick is wrong (if it is), and reasoning for every option. Use <em>Reset</em> at the top to start the quiz over. Your progress saves automatically.</p>
+    
+<div class="q" id="q-0" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q1</span>What is the Model Context Protocol (MCP) for?</p>
+  <div class="options"><div class="option" onclick="pickOption(0,0)"><span class="letter">A</span><span>A new chat protocol for users</span></div>
+<div class="option" onclick="pickOption(0,1)"><span class="letter">B</span><span>A standard way for agents to discover and call external tools, data sources, and capabilities</span></div>
+<div class="option" onclick="pickOption(0,2)"><span class="letter">C</span><span>A Microsoft-only feature</span></div>
+<div class="option" onclick="pickOption(0,3)"><span class="letter">D</span><span>A replacement for HTTPS</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-1" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q2</span>When should an architect propose Computer Use in Copilot Studio?</p>
+  <div class="options"><div class="option" onclick="pickOption(1,0)"><span class="letter">A</span><span>When the target system has a clean modern API</span></div>
+<div class="option" onclick="pickOption(1,1)"><span class="letter">B</span><span>When the target is a legacy or third-party app/website with no usable API and the agent must drive its UI</span></div>
+<div class="option" onclick="pickOption(1,2)"><span class="letter">C</span><span>Always</span></div>
+<div class="option" onclick="pickOption(1,3)"><span class="letter">D</span><span>Never</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-2" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q3</span>Honeywell orchestrates research, drafting, and review agents on top of M365 — a multi-agent extensibility pattern. Which extensibility surface is most relevant?</p>
+  <div class="options"><div class="option" onclick="pickOption(2,0)"><span class="letter">A</span><span>Microsoft Foundry + agent extensibility in M365 Copilot, possibly with A2A/MCP for agent-to-agent calls</span></div>
+<div class="option" onclick="pickOption(2,1)"><span class="letter">B</span><span>Local Excel macros only</span></div>
+<div class="option" onclick="pickOption(2,2)"><span class="letter">C</span><span>Standalone desktop app</span></div>
+<div class="option" onclick="pickOption(2,3)"><span class="letter">D</span><span>Static SharePoint page</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-3" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q4</span>Which of these is the BEST scenario to design a custom model in Microsoft Foundry rather than use a Microsoft-managed model?</p>
+  <div class="options"><div class="option" onclick="pickOption(3,0)"><span class="letter">A</span><span>Generic email drafting</span></div>
+<div class="option" onclick="pickOption(3,1)"><span class="letter">B</span><span>Domain-specific predictions where you have proprietary labeled data and need controlled latency and IP isolation</span></div>
+<div class="option" onclick="pickOption(3,2)"><span class="letter">C</span><span>Calendar scheduling</span></div>
+<div class="option" onclick="pickOption(3,3)"><span class="letter">D</span><span>Standard FAQ</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-4" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q5</span>An architect wants to surface an agent inside Microsoft Teams for a sales team. Which design path is correct?</p>
+  <div class="options"><div class="option" onclick="pickOption(4,0)"><span class="letter">A</span><span>Build a separate website</span></div>
+<div class="option" onclick="pickOption(4,1)"><span class="letter">B</span><span>Use M365 Copilot agent extensibility / Copilot Studio publishing to Teams so the agent appears in users&#x27; existing Teams workspace</span></div>
+<div class="option" onclick="pickOption(4,2)"><span class="letter">C</span><span>Email people screenshots</span></div>
+<div class="option" onclick="pickOption(4,3)"><span class="letter">D</span><span>Print a flyer</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-5" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q6</span>What does enabling &#x27;reasoning&#x27; in a Copilot Studio agent typically do?</p>
+  <div class="options"><div class="option" onclick="pickOption(5,0)"><span class="letter">A</span><span>Forces a small language model</span></div>
+<div class="option" onclick="pickOption(5,1)"><span class="letter">B</span><span>Lets the agent decompose a goal into sub-steps and pick tools/topics dynamically rather than following a single deterministic path</span></div>
+<div class="option" onclick="pickOption(5,2)"><span class="letter">C</span><span>Disables fallback</span></div>
+<div class="option" onclick="pickOption(5,3)"><span class="letter">D</span><span>Enables encryption</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-6" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q7</span>Bayer Crop Science extends Foundry with their proprietary agronomic data. What is the architect&#x27;s correct framing for that extensibility?</p>
+  <div class="options"><div class="option" onclick="pickOption(6,0)"><span class="letter">A</span><span>It&#x27;s a one-time data dump</span></div>
+<div class="option" onclick="pickOption(6,1)"><span class="letter">B</span><span>It&#x27;s a continuous integration of curated, governed data into the agent grounding layer with monitoring</span></div>
+<div class="option" onclick="pickOption(6,2)"><span class="letter">C</span><span>It&#x27;s irrelevant</span></div>
+<div class="option" onclick="pickOption(6,3)"><span class="letter">D</span><span>It&#x27;s only a UI change</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+
+<div class="q" id="q-7" data-locked="0">
+  <p class="q-stem"><span class="q-num">Q8</span>Which is the MOST defensible reason to NOT extend Microsoft Copilot and instead build a custom agent from scratch?</p>
+  <div class="options"><div class="option" onclick="pickOption(7,0)"><span class="letter">A</span><span>The team prefers building from scratch</span></div>
+<div class="option" onclick="pickOption(7,1)"><span class="letter">B</span><span>The use case requires deep IP, unique workflows, or non-Microsoft surfaces that Copilot extensibility cannot reach</span></div>
+<div class="option" onclick="pickOption(7,2)"><span class="letter">C</span><span>Custom is always better</span></div>
+<div class="option" onclick="pickOption(7,3)"><span class="letter">D</span><span>Microsoft licenses are too cheap</span></div>
+</div>
+  <div class="explain" style="display:none"></div>
+</div>
+
+  </section>
+
+  <section class="card refs">
+    <h2><span class="icon">→</span>Further reading on Microsoft Learn</h2>
+    <a href="https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/" target="_blank" rel="noopener">M365 Copilot agents<small>https://learn.microsoft.com/en-us/microsoft-365-copilot/extensibility/</small></a><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/foundry-models-overview" target="_blank" rel="noopener">Azure AI Foundry custom models<small>https://learn.microsoft.com/en-us/azure/ai-foundry/concepts/foundry-models-overview</small></a><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio" target="_blank" rel="noopener">Copilot Studio overview (extensibility section)<small>https://learn.microsoft.com/en-us/microsoft-copilot-studio/fundamentals-what-is-copilot-studio</small></a>
+  </section>
+
+  <footer class="foot">
+    AB-100 — Architecting agentic AI business solutions · Microsoft customer stories used as use cases.<br>
+    Self-paced — open this page as many times as you want. Progress is saved in your browser.
+  </footer>
+</div>
+<script>
+const QUIZ_DATA = {"questions": [{"q": "What is the Model Context Protocol (MCP) for?", "options": ["A new chat protocol for users", "A standard way for agents to discover and call external tools, data sources, and capabilities", "A Microsoft-only feature", "A replacement for HTTPS"], "correct": 1, "explanations": ["MCP isn't a chat protocol.", "Correct \u2014 MCP is the open standard that lets agents plug into tools and data through a consistent interface.", "MCP is open, not Microsoft-only.", "MCP runs over standard transports."]}, {"q": "When should an architect propose Computer Use in Copilot Studio?", "options": ["When the target system has a clean modern API", "When the target is a legacy or third-party app/website with no usable API and the agent must drive its UI", "Always", "Never"], "correct": 1, "explanations": ["Use the API if it's available \u2014 cleaner and faster.", "Correct \u2014 Computer Use is the bridge for legacy/no-API apps where UI automation is the only path.", "Not always \u2014 it's heavier than an API call.", "It has clear use cases."]}, {"q": "Honeywell orchestrates research, drafting, and review agents on top of M365 \u2014 a multi-agent extensibility pattern. Which extensibility surface is most relevant?", "options": ["Microsoft Foundry + agent extensibility in M365 Copilot, possibly with A2A/MCP for agent-to-agent calls", "Local Excel macros only", "Standalone desktop app", "Static SharePoint page"], "correct": 0, "explanations": ["Correct \u2014 Foundry plus M365 Copilot agent extensibility is the pattern; A2A/MCP coordinate the agents.", "Macros don't scale.", "Standalone app misses M365 surface.", "Static pages aren't agents."]}, {"q": "Which of these is the BEST scenario to design a custom model in Microsoft Foundry rather than use a Microsoft-managed model?", "options": ["Generic email drafting", "Domain-specific predictions where you have proprietary labeled data and need controlled latency and IP isolation", "Calendar scheduling", "Standard FAQ"], "correct": 1, "explanations": ["Generic tasks don't justify custom models.", "Correct \u2014 custom Foundry models earn their cost when proprietary data, latency, and IP boundaries matter.", "Calendar tasks are solved.", "FAQ doesn't need custom."]}, {"q": "An architect wants to surface an agent inside Microsoft Teams for a sales team. Which design path is correct?", "options": ["Build a separate website", "Use M365 Copilot agent extensibility / Copilot Studio publishing to Teams so the agent appears in users' existing Teams workspace", "Email people screenshots", "Print a flyer"], "correct": 1, "explanations": ["Defeats the purpose.", "Correct \u2014 Teams is a first-class agent surface; Copilot Studio publishes there directly.", "Not a design.", "Not a design."]}, {"q": "What does enabling 'reasoning' in a Copilot Studio agent typically do?", "options": ["Forces a small language model", "Lets the agent decompose a goal into sub-steps and pick tools/topics dynamically rather than following a single deterministic path", "Disables fallback", "Enables encryption"], "correct": 1, "explanations": ["It's not about model size.", "Correct \u2014 reasoning gives the agent dynamic step-planning over its tools and knowledge.", "Fallback is independent.", "Encryption is separate."]}, {"q": "Bayer Crop Science extends Foundry with their proprietary agronomic data. What is the architect's correct framing for that extensibility?", "options": ["It's a one-time data dump", "It's a continuous integration of curated, governed data into the agent grounding layer with monitoring", "It's irrelevant", "It's only a UI change"], "correct": 1, "explanations": ["Data drifts; one-time imports rot.", "Correct \u2014 extensibility is a pipeline, not a one-shot import.", "It's the heart of the build.", "Far more than UI."]}, {"q": "Which is the MOST defensible reason to NOT extend Microsoft Copilot and instead build a custom agent from scratch?", "options": ["The team prefers building from scratch", "The use case requires deep IP, unique workflows, or non-Microsoft surfaces that Copilot extensibility cannot reach", "Custom is always better", "Microsoft licenses are too cheap"], "correct": 1, "explanations": ["Preference is not architecture.", "Correct \u2014 extensibility limits and IP boundaries are the only defensible reasons.", "False generalization.", "Not a reason."]}]};
+const MODULE_NUM = 6;
+const totalQ = QUIZ_DATA.questions.length;
+const STORE_KEY = "ab100-progress-mod-" + MODULE_NUM;
+
+let answered = 0;
+let correct = 0;
+let userAnswers = {}; // qIndex -> chosenIndex
+
+function saveProgress() {
+  try {
+    const p = { answered, correct, totalQ, userAnswers, savedAt: Date.now() };
+    localStorage.setItem(STORE_KEY, JSON.stringify(p));
+    // also a global completion record
+    const all = JSON.parse(localStorage.getItem("ab100-progress-all") || "{}");
+    all["m" + MODULE_NUM] = { score: correct, total: totalQ, answered, complete: answered === totalQ, at: Date.now() };
+    localStorage.setItem("ab100-progress-all", JSON.stringify(all));
+  } catch(e) {}
+}
+
+function loadProgress() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const p = JSON.parse(raw);
+    if (!p || !p.userAnswers) return;
+    userAnswers = p.userAnswers || {};
+    Object.keys(userAnswers).forEach(k => {
+      const qi = parseInt(k);
+      const oi = userAnswers[k];
+      applyAnswerVisuals(qi, oi);
+    });
+  } catch(e) {}
+}
+
+function applyAnswerVisuals(qi, oi) {
+  const q = QUIZ_DATA.questions[qi];
+  const block = document.getElementById('q-' + qi);
+  if (!block || block.dataset.locked === '1') return;
+  block.dataset.locked = '1';
+  const opts = block.querySelectorAll('.option');
+  opts.forEach((el, i) => {
+    el.classList.add('locked');
+    if (i === q.correct) el.classList.add('correct');
+    else if (i === oi) el.classList.add('wrong');
+    else el.classList.add('disabled');
+  });
+  const expl = block.querySelector('.explain');
+  expl.style.display = 'block';
+  const isRight = oi === q.correct;
+  expl.classList.remove('right', 'wrong');
+  expl.classList.add(isRight ? 'right' : 'wrong');
+  let out = '';
+  out += '<div><span class="verdict">' + (isRight ? 'Correct' : 'Not quite') + '</span>' + q.explanations[q.correct] + '</div>';
+  if (!isRight) {
+    out += '<div style="margin-top:10px;"><strong>Why your pick is wrong:</strong> ' + q.explanations[oi] + '</div>';
+  }
+  out += '<details><summary>See reasoning for every option</summary><ul>';
+  for (let i = 0; i < q.options.length; i++) {
+    const tag = (i === q.correct) ? ' (correct)' : '';
+    out += '<li><strong>' + String.fromCharCode(65+i) + ')' + tag + '</strong> ' + q.explanations[i] + '</li>';
+  }
+  out += '</ul></details>';
+  expl.innerHTML = out;
+  if (typeof userAnswers[qi] === 'undefined') {
+    answered += 1;
+    if (isRight) correct += 1;
+  }
+  renderScorebar();
+}
+
+function pickOption(qi, oi) {
+  const block = document.getElementById('q-' + qi);
+  if (block.dataset.locked === '1') return;
+  applyAnswerVisuals(qi, oi);
+  userAnswers[qi] = oi;
+  saveProgress();
+}
+
+function resetAll() {
+  if (!confirm("Reset this quiz? All your answers will be cleared.")) return;
+  for (let i = 0; i < totalQ; i++) {
+    const block = document.getElementById('q-' + i);
+    if (block.dataset.locked === '1') {
+      block.dataset.locked = '0';
+      block.querySelectorAll('.option').forEach(el => { el.className = 'option'; });
+      const expl = block.querySelector('.explain');
+      expl.style.display = 'none';
+      expl.classList.remove('right', 'wrong');
+      expl.innerHTML = '';
+    }
+  }
+  answered = 0; correct = 0;
+  userAnswers = {};
+  saveProgress();
+  document.getElementById('success-banner').classList.remove('show');
+  renderScorebar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderScorebar() {
+  document.getElementById('progress-text').innerHTML = '<strong>' + answered + '</strong> of ' + totalQ + ' answered';
+  document.getElementById('score-text').textContent = 'Score: ' + correct + '/' + totalQ;
+  const pct = totalQ ? Math.round((correct/totalQ)*100) : 0;
+  document.getElementById('pct-text').textContent = pct + '%';
+  if (answered === totalQ) {
+    const banner = document.getElementById('success-banner');
+    banner.classList.add('show');
+    let msg = '';
+    if (correct === totalQ) msg = 'Perfect run. You know this module cold.';
+    else if (correct >= totalQ * 0.75) msg = 'Strong pass. Skim the explanations and you are ready.';
+    else if (correct >= totalQ * 0.5) msg = 'Halfway home. Re-read the recap and try again.';
+    else msg = 'Slow down — go back to the recap and key concepts before retrying.';
+    document.getElementById('banner-text').textContent =
+      'You scored ' + correct + '/' + totalQ + ' (' + pct + '%). ' + msg;
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadProgress();
+  renderScorebar();
+});
+</script>
+</body>
+</html>
