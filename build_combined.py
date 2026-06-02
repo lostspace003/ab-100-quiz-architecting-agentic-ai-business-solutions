@@ -372,9 +372,48 @@ footer.foot {
 .intro {
   background: var(--bg-card); padding: 28px 32px; border-radius: 20px;
   box-shadow: var(--shadow); margin-bottom: 22px;
+  border-left: 6px solid var(--accent);
 }
-.intro h1 { margin: 0 0 8px; font-size: 28px; color: var(--ink); }
+.intro h1 { margin: 4px 0 8px; font-size: 28px; color: var(--ink); line-height: 1.2; }
 .intro p { margin: 0 0 6px; color: var(--ink-soft); }
+.intro .intro-sub { color: var(--ink-soft); font-size: 15px; margin: 0 0 12px; }
+.intro .intro-sub strong { color: var(--brand); }
+.intro .exam-code {
+  display: inline-block; background: var(--accent); color: white;
+  font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 999px;
+}
+.exam-meta {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;
+}
+.meta-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #eef3fb; border: 1px solid var(--line); border-radius: 999px;
+  padding: 5px 12px; font-size: 12.5px;
+}
+.meta-pill .meta-key { color: var(--muted); font-weight: 500; }
+.meta-pill .meta-val { color: var(--brand); font-weight: 700; }
+
+.domain-grid {
+  display: grid; gap: 12px; margin-top: 4px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.domain {
+  border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px;
+  background: linear-gradient(180deg, #f9fbff 0%, #eef3fb 100%);
+}
+.domain-pct {
+  display: inline-block; background: var(--brand); color: white;
+  font-weight: 800; font-size: 13px; padding: 4px 10px; border-radius: 8px;
+  margin-bottom: 8px;
+}
+.domain-name { font-weight: 700; color: var(--ink); font-size: 14.5px; margin-bottom: 4px; line-height: 1.3; }
+.domain-mods { color: var(--muted); font-size: 12.5px; }
+.exam-note {
+  margin-top: 14px; padding: 10px 14px; border-radius: 10px;
+  background: var(--warn-soft); border-left: 3px solid var(--warn);
+  font-size: 13px; color: var(--ink-soft);
+}
 .modules-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
 .mod-card {
   display: block; text-decoration: none; color: inherit; cursor: pointer;
@@ -496,10 +535,58 @@ footer.foot {
     overview_pane = f"""
 <div class="pane active" id="pane-overview">
   <div class="intro">
-    <h1>Architecting Agentic AI Business Solutions</h1>
-    <p>Eleven modules. Each has a recap, the key concepts you need to leave with, an architect cheat-sheet, a practice quiz with retry, and the canonical Microsoft Learn pages for follow-up.</p>
-    <p style="margin-top:8px;color:var(--muted);font-size:13.5px;">Pick any module to start. Progress is saved in your browser — close the tab and come back.</p>
+    <div class="exam-code">Exam AB-100 · Microsoft Certifications</div>
+    <h1>AB-100 — Architecting Agentic AI Business Solutions</h1>
+    <p class="intro-sub">Path to the <strong>Agentic AI Business Solutions Architect Expert</strong> certification.</p>
+    <div class="exam-meta">
+      <span class="meta-pill"><span class="meta-key">Exam code</span><span class="meta-val">AB-100</span></span>
+      <span class="meta-pill"><span class="meta-key">Passing score</span><span class="meta-val">700 / 1000</span></span>
+      <span class="meta-pill"><span class="meta-key">Domains</span><span class="meta-val">3 · weighted</span></span>
+      <span class="meta-pill"><span class="meta-key">Format</span><span class="meta-val">Proctored</span></span>
+    </div>
+    <p style="margin-top:14px;">Eleven modules — each with a recap, the key concepts you need to leave with, an architect cheat-sheet, a practice quiz with retry, and the canonical Microsoft Learn pages for follow-up.</p>
+    <p style="margin-top:6px;color:var(--muted);font-size:13.5px;">Pick any module to start. Progress is saved in your browser — close the tab and come back.</p>
   </div>
+
+  <section class="card">
+    <h2><span class="icon">i</span>About AB-100</h2>
+    <p style="margin:0 0 12px;color:var(--ink-soft);font-size:14.5px;">
+      AB-100 validates that you can architect AI-powered business solutions across the Microsoft stack —
+      Microsoft 365 Copilot, Copilot Studio, Microsoft Foundry &amp; Foundry Tools, Dynamics 365, and Power Platform.
+      The audience is an experienced solution architect who designs <strong>agentic-first, multi-agent, secure, ROI-defensible</strong>
+      solutions and champions responsible AI. Passing AB-100 plus a prerequisite associate certification earns the
+      <em>Agentic AI Business Solutions Architect Expert</em> credential.
+    </p>
+
+    <div class="domain-grid">
+      <div class="domain">
+        <div class="domain-pct">25–30%</div>
+        <div class="domain-name">Plan AI-powered business solutions</div>
+        <div class="domain-mods">Modules 2 · 3 · 4</div>
+      </div>
+      <div class="domain">
+        <div class="domain-pct">25–30%</div>
+        <div class="domain-name">Design AI-powered business solutions</div>
+        <div class="domain-mods">Modules 5 · 6 · 7</div>
+      </div>
+      <div class="domain">
+        <div class="domain-pct">40–45%</div>
+        <div class="domain-name">Deploy AI-powered business solutions</div>
+        <div class="domain-mods">Modules 8 · 9 · 10 · 11</div>
+      </div>
+    </div>
+
+    <p class="exam-note">
+      Module 1 is the architect-role primer that frames the whole course; it is not a separate exam domain.
+    </p>
+
+    <div class="refs" style="margin-top:18px;">
+      <a href="https://learn.microsoft.com/credentials/certifications/resources/study-guides/ab-100" target="_blank" rel="noopener">Official AB-100 study guide<small>learn.microsoft.com/credentials/certifications/resources/study-guides/ab-100</small></a>
+      <a href="https://learn.microsoft.com/credentials/certifications/agentic-ai-business-solutions-architect/" target="_blank" rel="noopener">Agentic AI Business Solutions Architect — certification page<small>learn.microsoft.com/credentials/certifications/agentic-ai-business-solutions-architect/</small></a>
+      <a href="https://learn.microsoft.com/credentials/certifications/exams/AB-100" target="_blank" rel="noopener">Exam AB-100 — schedule &amp; details<small>learn.microsoft.com/credentials/certifications/exams/AB-100</small></a>
+      <a href="https://learn.microsoft.com/credentials/certifications/agentic-ai-business-solutions-architect/practice/assessment?assessment-type=practice&amp;assessmentId=1815645847&amp;practice-assessment-type=certification" target="_blank" rel="noopener">Free official practice assessment<small>learn.microsoft.com/.../practice/assessment</small></a>
+    </div>
+  </section>
 
   <div class="tot-progress">
     <span class="label"><strong id="totDone">0</strong> of 11 modules completed</span>
