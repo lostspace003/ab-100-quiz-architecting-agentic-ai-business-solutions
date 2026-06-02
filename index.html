@@ -345,6 +345,70 @@ footer.foot {
 .pane { display: none; }
 .pane.active { display: block; }
 
+/* Top promo strip — Gennoor AI Academy */
+.promo-strip {
+  background: linear-gradient(135deg, #0b1530 0%, #1f3a68 60%, #2c4f8c 100%);
+  color: white; padding: 10px 18px; font-size: 13.5px;
+  position: sticky; top: 0; z-index: 50;
+  box-shadow: 0 2px 8px rgba(15,29,58,0.18);
+}
+.promo-strip a {
+  color: white; text-decoration: none;
+  display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center;
+  max-width: 1200px; margin: 0 auto;
+}
+.promo-strip .promo-tag {
+  background: rgba(255,255,255,0.18); padding: 4px 11px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+  flex-shrink: 0;
+}
+.promo-strip .promo-text { opacity: 0.92; }
+.promo-strip .promo-cta {
+  font-weight: 700; padding: 4px 12px; border-radius: 999px;
+  background: rgba(255,255,255,0.16); transition: background .15s ease;
+  white-space: nowrap;
+}
+.promo-strip a:hover .promo-cta { background: white; color: var(--brand); }
+
+/* Bottom CTA card — full Gennoor AI Academy block on Overview */
+.cta-card {
+  background: linear-gradient(135deg, #0b1530 0%, #1f3a68 55%, #3b6cae 100%);
+  color: white; border-radius: 20px; padding: 32px 36px; margin: 28px 0 8px;
+  box-shadow: var(--shadow-strong); position: relative; overflow: hidden;
+}
+.cta-card::after {
+  content: ""; position: absolute; right: -90px; top: -90px; width: 320px; height: 320px;
+  border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.16), transparent 65%);
+}
+.cta-card .cta-tag {
+  display: inline-block; background: rgba(255,255,255,0.18); padding: 5px 12px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
+}
+.cta-card h2 {
+  margin: 12px 0 8px; font-size: 24px; line-height: 1.25; color: white;
+  position: relative; z-index: 1;
+}
+.cta-card p { margin: 0 0 16px; opacity: 0.95; max-width: 720px; font-size: 14.5px; position: relative; z-index: 1; }
+.cta-card .cta-stats {
+  display: flex; gap: 18px; flex-wrap: wrap; margin: 0 0 18px;
+  font-size: 13px; opacity: 0.9; position: relative; z-index: 1;
+}
+.cta-card .cta-stats span strong { color: white; font-weight: 800; }
+.cta-card .cta-btn {
+  display: inline-block; background: white; color: var(--brand);
+  padding: 11px 22px; border-radius: 10px; font-weight: 700; text-decoration: none;
+  font-size: 14.5px; transition: transform .15s ease, box-shadow .15s ease;
+  position: relative; z-index: 1;
+}
+.cta-card .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
+
+.sidebar-credit {
+  display: block; margin-top: 6px; color: var(--muted);
+  font-size: 11.5px; text-decoration: none;
+}
+.sidebar-credit:hover { color: var(--brand); text-decoration: underline; }
+.sidebar-credit strong { color: var(--brand); font-weight: 700; }
+
 /* Mobile nav toggle */
 .mobile-nav-bar { display: none; }
 
@@ -357,6 +421,11 @@ footer.foot {
   }
   .sidebar.open { max-height: 80vh; overflow-y: auto; padding: 18px 16px; }
   .main { padding: 18px 18px 80px; }
+  .promo-strip { font-size: 12.5px; padding: 9px 14px; }
+  .promo-strip a { gap: 8px; }
+  .promo-strip .promo-text { font-size: 12px; }
+  .cta-card { padding: 24px 22px; }
+  .cta-card h2 { font-size: 19px; }
   .mobile-nav-bar {
     display: flex; align-items: center; justify-content: space-between;
     padding: 12px 16px; background: white; border-bottom: 1px solid var(--line);
@@ -395,6 +464,14 @@ footer.foot {
 </head>
 <body>
 
+<div class="promo-strip">
+  <a href="https://gennoor.com" target="_blank" rel="noopener">
+    <span class="promo-tag">Gennoor Tech · AI Academy</span>
+    <span class="promo-text">Live, instructor-led AI architect tracks · taught by an MCT with 80+ enterprise programs shipped globally</span>
+    <span class="promo-cta">Explore courses →</span>
+  </a>
+</div>
+
 <div class="mobile-nav-bar">
   <span class="brand-pill">AB-100 · Student Portal</span>
   <button class="menu-btn" id="menu-toggle" type="button">☰ Modules</button>
@@ -403,6 +480,7 @@ footer.foot {
 <div class="layout">
   <aside class="sidebar" id="sidebar">
     <span class="sidebar-brand">AB-100 · Student Portal</span>
+    <a class="sidebar-credit" href="https://gennoor.com" target="_blank" rel="noopener">by <strong>Gennoor Tech · AI Academy</strong></a>
     <div class="nav-section-label">Course</div>
     <button class="nav-item" data-target="overview" type="button"><span class="nav-num">★</span><span class="nav-label">Overview</span><span class="nav-check"></span></button>
 <button class="nav-item" data-target="m1" data-modnum="1" type="button"><span class="nav-num">1</span><span class="nav-label">Introduction to Agentic AI Business Solution Architecture</span><span class="nav-check"></span></button>
@@ -496,8 +574,21 @@ footer.foot {
 <a class="mod-card" data-target="m11" data-modnum="11" href="#m11"><span class="completion">Complete</span><span class="num">11</span><h3>Design responsible AI, security, governance, risk management, and compliance</h3><div class="summary">The hardest topic and the most important. Where the architect anchors ethics.</div><div class="stat-row"><span class="stat">📋 6 recap points</span><span class="stat">📚 7 key concepts</span><span class="stat">❓ 8 questions</span></div></a>
   </div>
 
+  <section class="cta-card">
+    <span class="cta-tag">Gennoor Tech · AI Academy</span>
+    <h2>Take it further — live, hands-on AI architect tracks.</h2>
+    <p>Built and delivered by an MCT with 14+ years of practice and 80+ enterprise programs shipped across six countries — covering AB-100 prep, Copilot Studio, Microsoft Foundry, multi-agent design, and responsible AI for leadership and engineering teams.</p>
+    <div class="cta-stats">
+      <span><strong>14+</strong> years</span>
+      <span><strong>80+</strong> enterprise programs</span>
+      <span><strong>6+</strong> countries</span>
+      <span><strong>16</strong> active Microsoft certs</span>
+    </div>
+    <a class="cta-btn" href="https://gennoor.com" target="_blank" rel="noopener">Explore the AI Academy on gennoor.com →</a>
+  </section>
+
   <footer class="foot">Microsoft AB-100 ILT companion · Use it before, during, or after the trainer-led delivery.<br>
-  Built around the Microsoft Learn references in the official decks.</footer>
+  Built around the Microsoft Learn references in the official decks · Brought to you by <a href="https://gennoor.com" target="_blank" rel="noopener" style="color:var(--brand);font-weight:600;text-decoration:none;">Gennoor Tech · AI Academy</a>.</footer>
 </div>
 
     
