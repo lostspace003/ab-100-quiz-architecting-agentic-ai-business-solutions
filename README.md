@@ -1,3 +1,4 @@
+[![Board Status](https://dev.azure.com/lostspace0030613/e60622cb-03d0-47c7-8e1d-90d047bbf5b9/d5dcebb2-2bbe-4575-b811-d3674d3e296d/_apis/work/boardbadge/4e213665-2aca-4923-a461-01af903566a0)](https://dev.azure.com/lostspace0030613/e60622cb-03d0-47c7-8e1d-90d047bbf5b9/_boards/board/t/d5dcebb2-2bbe-4575-b811-d3674d3e296d/Microsoft.RequirementCategory)
 # AB-100 — Architecting Agentic AI Business Solutions · Student Portal
 
 A static, single-page study portal for the Microsoft **AB-100 — Architecting Agentic AI Business Solutions** course. All eleven modules — recap, key concepts, architect cheat-sheet, practice quiz with explanations, and curated Microsoft Learn references — bundled into one HTML file with a left-sidebar nav.
